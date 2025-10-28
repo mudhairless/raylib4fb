@@ -409,6 +409,10 @@ declare operator * (byval lhs as const Matrix, byval rhs as const Matrix) as Mat
 
 #ifdef RAYMATH_IMPLEMENTATION
 
+function FloatEquals(byval x as single, byval y as single) as boolean
+    return (fabsf(x - y)) <= (EPSILON*fmaxf(1.0f, fmaxf(fabsf(x), fabsf(y))))
+end function
+
 '----------------------------------------------------------------------------------
 ' Module Functions Definition - Vector2 math
 '----------------------------------------------------------------------------------
