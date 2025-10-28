@@ -10,6 +10,7 @@
 *   BSD-like license that allows static linking with closed source software
 *
 *   Copyright (c) 2015-2025 Ramon Santamaria (@raysan5)
+*   Translated to FreeBASIC by Ebben Feagan 2025
 *
 *******************************************************************************************'/
 
