@@ -1073,7 +1073,7 @@ declare function GetMouseDelta() as Vector2
 declare sub SetMousePosition(byval x as long, byval y as long)
 declare sub SetMouseOffset(byval offsetX as long, byval offsetY as long)
 declare sub SetMouseScale(byval scaleX as single, byval scaleY as single)
-declare function GetMouseWheelMove() as long
+declare function GetMouseWheelMove() as single
 declare function GetMouseWheelMoveV() as Vector2
 declare sub SetMouseCursor(byval cursor as long)
 
