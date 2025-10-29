@@ -118,6 +118,18 @@ end extern
 ' Camera orbital speed in CAMERA_ORBITAL mode
 #define CAMERA_ORBITAL_SPEED                            0.5f       ' Radians per second
 
+#ifndef RL_CULL_DISTANCE_NEAR
+    #define CAMERA_CULL_DISTANCE_NEAR      0.01f
+#else
+    #define CAMERA_CULL_DISTANCE_NEAR   RL_CULL_DISTANCE_NEAR
+#endif
+
+#ifndef RL_CULL_DISTANCE_FAR
+    #define CAMERA_CULL_DISTANCE_FAR    1000.0f
+#else
+    #define CAMERA_CULL_DISTANCE_FAR    RL_CULL_DISTANCE_FAR
+#endif
+
 '----------------------------------------------------------------------------------
 ' Module Functions Definition
 '----------------------------------------------------------------------------------
