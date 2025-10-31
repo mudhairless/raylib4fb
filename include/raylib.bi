@@ -232,7 +232,7 @@ type Rectangle
 end type
 
 type Image
-	data as any ptr
+	data_ as any ptr
 	width_ as long
 	height as long
 	mipmaps as long
@@ -280,7 +280,7 @@ type Font
     glyphPadding as long
 	texture as Texture2D
 	recs as Rectangle ptr
-	chars as GlyphInfo ptr
+	glyphs as GlyphInfo ptr
 end type
 
 type Camera3D
@@ -389,7 +389,7 @@ type Wave
 	sampleRate as ulong
 	sampleSize as ulong
 	channels as ulong
-	data as any ptr
+	data_ as any ptr
 end type
 
 type rAudioBuffer as rAudioBuffer_
@@ -837,7 +837,7 @@ end enum
 'WARNING: These callbacks are intended for advanced users
 type TraceLogCallback as sub(byval logType as long, byval text as const zstring ptr, byval args as va_list)
 type LoadFileDataCallback as function(byval fileName as const zstring ptr, byval dataSize as long ptr) as ubyte ptr
-type SaveFileDataCallback as function(byval fileName as const zstring ptr, byval data as any ptr, byval dataSize as long) as boolean
+type SaveFileDataCallback as function(byval fileName as const zstring ptr, byval data_ as any ptr, byval dataSize as long) as boolean
 type LoadFileTextCallback as function(byval fileName as const zstring ptr) as zstring ptr
 type SaveFileTextCallback as function(byval fileName as const zstring ptr, byval text as zstring ptr) as boolean
 
@@ -989,9 +989,9 @@ declare sub SetSaveFileTextCallback(byval callback as SaveFileTextCallback)
 
 ' Files management functions
 declare function LoadFileData(byval fileName as const zstring ptr, byval bytesRead as ulong ptr) as ubyte ptr
-declare sub UnloadFileData(byval data as ubyte ptr)
-declare function SaveFileData(byval fileName as const zstring ptr, byval data as any ptr, byval dataSize as ulong) as boolean
-declare function ExportDataAsCode(byval data as const ubyte ptr, byval dataSize as long, byval fileName as const zstring ptr) as boolean
+declare sub UnloadFileData(byval data_ as ubyte ptr)
+declare function SaveFileData(byval fileName as const zstring ptr, byval data_ as any ptr, byval dataSize as ulong) as boolean
+declare function ExportDataAsCode(byval data_ as const ubyte ptr, byval dataSize as long, byval fileName as const zstring ptr) as boolean
 declare function LoadFileText(byval fileName as const zstring ptr) as zstring ptr
 declare sub UnloadFileText(byval text as zstring ptr)
 declare function SaveFileText(byval fileName as const zstring ptr, byval text as zstring ptr) as boolean
@@ -1020,13 +1020,13 @@ declare sub UnloadDroppedFiles(byval files as FilePathList)
 declare function GetFileModTime(byval fileName as const zstring ptr) as integer
 
 ' Compression/Encoding Functionality
-declare function CompressData(byval data as const ubyte ptr, byval dataSize as long, byval compDataSize as long ptr) as ubyte ptr
+declare function CompressData(byval data_ as const ubyte ptr, byval dataSize as long, byval compDataSize as long ptr) as ubyte ptr
 declare function DecompressData(byval compData as const ubyte ptr, byval compDataSize as long, byval dataSize as long ptr) as ubyte ptr
-declare function EncodeDataBase64(byval data as const ubyte ptr, byval dataSize as long, byval outputSize as long ptr) as ubyte ptr
-declare function DecodeDataBase64(byval data as const ubyte ptr, byval outputSize as long ptr) as ubyte ptr
-declare function ComputeCRC32(byval data as ubyte ptr, byval dataSize as long) as ulong
-declare function ComputeMD5(byval data as ubyte ptr, byval dataSize as long) as ulong ptr
-declare function ComputeSHA1(byval data as ubyte ptr, byval dataSize as long) as ulong ptr
+declare function EncodeDataBase64(byval data_ as const ubyte ptr, byval dataSize as long, byval outputSize as long ptr) as ubyte ptr
+declare function DecodeDataBase64(byval data_ as const ubyte ptr, byval outputSize as long ptr) as ubyte ptr
+declare function ComputeCRC32(byval data_ as ubyte ptr, byval dataSize as long) as ulong
+declare function ComputeMD5(byval data_ as ubyte ptr, byval dataSize as long) as ulong ptr
+declare function ComputeSHA1(byval data_ as ubyte ptr, byval dataSize as long) as ulong ptr
 
 ' Automation events functionality
 declare function LoadAutomationEventList(byval fileName as const zstring ptr) as AutomationEventList
