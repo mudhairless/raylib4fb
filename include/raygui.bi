@@ -117,6 +117,9 @@
 *       TOOL: rGuiLayout is a visual tool to create raygui layouts: github.com/raysan5/rguilayout
 *
 *   CONFIGURATION:
+*       #define USE_C_IMP
+*           Defines functions to be used with the C implementation of this API.
+*
 *       #define RAYGUI_IMPLEMENTATION
 *           Generates the implementation of the library into the included file.
 *           If not defined, the library is in header only mode and can be included in other headers
@@ -278,12 +281,18 @@
 #ifndef RAYGUI_BI
 #define RAYGUI_BI
 
+#ifdef USE_C_IMP
+#ifdef RAYGUI_IMPLEMENTATION
+#error "The defines USE_C_IMP and RAYGUI_IMPLEMENTATION cannot be used together."
+#endif
+#endif
+
 #define RAYGUI_VERSION_MAJOR 4
 #define RAYGUI_VERSION_MINOR 0
 #define RAYGUI_VERSION_PATCH 0
 #define RAYGUI_VERSION  "4.0"
 
-#include "raylib.bi"
+#include once "raylib.bi"
 
 '----------------------------------------------------------------------------------
 ' Types and Structures Definition
@@ -469,7 +478,9 @@ end enum
 '----------------------------------------------------------------------------------
 ' Module Functions Declaration
 '----------------------------------------------------------------------------------
-
+#ifdef USE_C_IMP
+extern "C"
+#endif
 
 ' Global gui state control functions
 declare sub GuiEnable()                                 ' Enable gui controls (global state)
@@ -551,7 +562,9 @@ declare function GuiColorBarHue(byval bounds as Rectangle, byval text as const z
 declare function GuiColorPickerHSV(byval bounds as Rectangle, byval text as const zstring ptr, byval colorHsv as Vector3 ptr) as long                ' RayColor Picker control that avoids conversion to RGB on each call (multiple color_ controls)
 declare function GuiColorPanelHSV(byval bounds as Rectangle, byval text as const zstring ptr, byval colorHsv as Vector3 ptr) as long                 ' RayColor Panel control that returns HSV color_ value, used by GuiColorPickerHSV()
 '----------------------------------------------------------------------------------------------------------
-
+#ifdef USE_C_IMP
+end extern
+#endif
 
 #ifndef RAYGUI_NO_ICONS
 '----------------------------------------------------------------------------------

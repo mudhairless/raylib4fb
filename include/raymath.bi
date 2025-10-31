@@ -23,6 +23,9 @@
 *           If not defined, the library is in header only mode and can be included in other headers
 *           or source files without problems. But only ONE file should hold the implementation.
 *
+*       #define USE_C_IMP
+*           Defines functions to be used with the C implementation of this API.
+*           Automatically disables FB operators.
 *
 *       #define RAYMATH_DISABLE_FB_OPERATORS
 *           Disables FreeBASIC operator overloads for raymath types.
@@ -51,6 +54,15 @@
 
 #ifndef RAYMATH_BI
 #define RAYMATH_BI
+
+#ifdef USE_C_IMP
+
+#ifdef RAYMATH_IMPLEMENTATION
+#error "The defines USE_C_IMP and RAYMATH_IMPLEMENTATION cannot be used together."
+#endif
+
+#define RAYMATH_DISABLE_FB_OPERATORS
+#endif
 
 #include once "crt/math.bi"
 
@@ -166,6 +178,9 @@ end type
 '----------------------------------------------------------------------------------
 ' Module Functions Declaration - Utils math
 '----------------------------------------------------------------------------------
+#ifdef USE_C_IMP
+extern "C"
+#endif
 
 declare function Clamp(byval value as single, byval _min as single, byval _max as single) as single
 declare function Lerp(byval start as single, byval end_ as single, byval amount as single) as single
@@ -358,6 +373,10 @@ declare function QuaternionToEuler(byval q as Quaternion) as Vector3
 declare function QuaternionTransform(byval q as Quaternion, byval mat as Matrix) as Quaternion
 declare function QuaternionEquals(byval a as Quaternion, byval b as Quaternion) as boolean
 declare sub MatrixDecompose(byval mat as Matrix, byval translation as Vector3 ptr, byval rotation as Quaternion ptr, byval scale as Vector3 ptr)
+
+#ifdef USE_C_IMP
+end extern
+#endif
 
 
 #ifndef RAYMATH_DISABLE_FB_OPERATORS
