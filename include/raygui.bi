@@ -1323,6 +1323,9 @@ function GuiGetStyle(byval control as long, byval property_ as long) as long
     if (not guiStyleLoaded) then
         GuiLoadStyleDefault()
     end if
+    if (control < 0 OR control > 16) then
+        control = 0
+    end if
     return guiStyle(control*(RAYGUI_MAX_PROPS_BASE + RAYGUI_MAX_PROPS_EXTENDED) + property_)
 end function
 
@@ -3859,13 +3862,13 @@ function GuiTextInputBox(byval bounds as Rectangle, byval title as const zstring
     if (secretViewActive <> NULL) then
     
         static stars as zstring ptr = strptr("****************")
-        if (GuiTextBox(type<Rectangle>( textBoxBounds.x, textBoxBounds.y, textBoxBounds.width_ - 4 - RAYGUI_TEXTINPUTBOX_HEIGHT, textBoxBounds.height ), _
-            iif(cbool(cbool((*(secretViewActive)) = 1) OR cbool(textEditMode)), text , stars), textMaxSize, textEditMode)) then
+        if ((GuiTextBox(type<Rectangle>( textBoxBounds.x, textBoxBounds.y, textBoxBounds.width_ - 4 - RAYGUI_TEXTINPUTBOX_HEIGHT, textBoxBounds.height ), _
+            iif((((*(secretViewActive)) = true) OR cbool(textEditMode)), text , stars), textMaxSize, textEditMode))) then
             
             textEditMode = not textEditMode
         end if
 
-        GuiToggle(type<Rectangle>( textBoxBounds.x + textBoxBounds.width_ - RAYGUI_TEXTINPUTBOX_HEIGHT, textBoxBounds.y, RAYGUI_TEXTINPUTBOX_HEIGHT, RAYGUI_TEXTINPUTBOX_HEIGHT ), iif(cbool(*(secretViewActive) = 1), "#44#" , "#45#"), secretViewActive)
+        GuiToggle(type<Rectangle>( textBoxBounds.x + textBoxBounds.width_ - RAYGUI_TEXTINPUTBOX_HEIGHT, textBoxBounds.y, RAYGUI_TEXTINPUTBOX_HEIGHT, RAYGUI_TEXTINPUTBOX_HEIGHT ), iif((*(secretViewActive) = true), "#44#" , "#45#"), secretViewActive)
     
     else
     
@@ -4604,7 +4607,7 @@ function GetTextWidth(byval text as const zstring ptr) as long
     dim as Vector2 textSize 
     var textIconOffset = 0l
 
-    if ((text <> NULL) AND (text[0] <> 0)) then
+    if ((text <> NULL) ANDALSO (text[0] <> 0)) then
     
         if (text[0] = asc("#")) then
             var i = 1
@@ -4614,6 +4617,7 @@ function GetTextWidth(byval text as const zstring ptr) as long
                     textIconOffset = i
                     exit while
                 end if
+                i += 1
             wend
         end if
 
@@ -4623,12 +4627,12 @@ function GetTextWidth(byval text as const zstring ptr) as long
         var fontSize = GuiGetStyle(DEFAULT, TEXT_SIZE)
 
         ' Custom MeasureText() implementation
-        if ((guiFont.texture.id > 0) AND (text <> NULL)) then
+        if ((guiFont.texture.id > 0) ANDALSO (text <> NULL)) then
         
             ' Get size in bytes of text, considering end of line and line break
             var size = 0l
             for i as integer = 0 to MAX_LINE_BUFFER_SIZE - 1
-                if ((text[i] <> 0) AND (text[i] <> 13)) then
+                if ((text[i] <> 0) ANDALSO (text[i] <> 13)) then
                     size += 1
                 else 
                     exit for
@@ -4804,7 +4808,7 @@ sub GuiDrawText(byval text as const zstring ptr, byval textBounds as Rectangle, 
         #define ICON_TEXT_PADDING   4
     #endif
 
-    if ((text = NULL) OR (text[0] = 0)) then
+    if ((text = NULL) ORELSE (text[0] = 0)) then
         return    ' Security check
     end if
 
