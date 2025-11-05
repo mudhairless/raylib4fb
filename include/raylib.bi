@@ -1352,7 +1352,7 @@ declare function GetCodepointCount(byval text as const zstring ptr) as long
 declare function GetCodepoint(byval text as const zstring ptr, byval codepointSize as long ptr) as long
 declare function GetCodepointNext(byval text as const zstring ptr, byval codepointSize as long ptr) as long
 declare function GetCodepointPrevious(byval text as const zstring ptr, byval codepointSize as long ptr) as long
-declare function CodepointToUtf8(byval codepoint as long, byval utf8Size as long ptr) as const zstring ptr
+declare function CodepointToUTF8(byval codepoint as long, byval utf8Size as long ptr) as const zstring ptr
 
 ' Text strings management functions (no UTF-8 strings, only byte chars)
 ' NOTE: Some strings allocate memory internally for returned strings, just be careful!
