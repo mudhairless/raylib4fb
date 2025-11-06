@@ -90,6 +90,10 @@
 
 #inclib "raylib"
 
+#ifndef NULL
+#define NULL cast(any ptr, 0)
+#endif
+
 #include once "crt/stdarg.bi"
 
 #if defined(__FB_CYGWIN__) or defined(__FB_LINUX__) or defined(__FB_FREEBSD__) or defined(__FB_OPENBSD__) or defined(__FB_NETBSD__)

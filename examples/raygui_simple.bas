@@ -1,6 +1,4 @@
 #include once "raylib.bi"
-
-#define RAYGUI_IMPLEMENTATION
 #include once "raygui.bi"
 
 
@@ -19,7 +17,7 @@ while (not exitWindow)
 
         if (showMessageBox) then
             DrawRectangle(0, 0, ScreenWidth, GetScreenHeight, Fade(RAYWHITE, 0.8f))
-            var result = GuiMessageBox(type<Rectangle>( ScreenWidth/2 - 125, ScreenHeight/2 - 50, 250, 100 ), GuiIconText(ICON_EXIT, "Close Window"), "Do you really want to exit?", "YesNo")
+            var result = GuiMessageBox(type<Rectangle>( ScreenWidth/2 - 125, ScreenHeight/2 - 50, 250, 100 ), GuiIconText(ICON_EXIT, "Close Window"), "Do you really want to exit?", "Yes;No")
 
             if ((result = 0) OR (result = 2)) then
                 showMessageBox = false

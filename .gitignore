@@ -1,2 +1,4 @@
 examples/*.exe
 examples/*.dll
+src/*.o
+src/*.a

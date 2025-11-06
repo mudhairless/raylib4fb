@@ -34,8 +34,6 @@
 *********************************************************************************************'/
 
 #include once "raylib.bi"
-
-#define RAYGUI_IMPLEMENTATION
 #include once "raygui.bi"
 
 
@@ -64,7 +62,7 @@ var valueBoxEditMode = false
 dim as zstring * 64 textBoxText = "Text box"
 var textBoxEditMode = false
 
-dim as zstring * 1024 textBoxMultiText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+dim as zstring * 1024 textBoxMultiText = !"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.\n\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 var textBoxMultiEditMode = false
 
 var listViewScrollIndex = 0l
@@ -73,7 +71,7 @@ dim as long listViewActive = -1l
 var listViewExScrollIndex = 0l
 var listViewExActive = 2l
 dim as long listViewExFocus = -1l
-dim as zstring ptr listViewExList(0 to 7) = { @"This", @"is", @"a", @"list view_", @"with", @"disable", @"elements", @"amazingnot " }
+dim as zstring ptr listViewExList(0 to 7) = { @"This", @"is", @"a", @"list view_", @"with", @"disable", @"elements", @"amazing!" }
 
 dim as zstring * 256 multiTextBoxText = "Multi text box"
 var multiTextBoxEditMode = false
@@ -106,7 +104,7 @@ var showTextInputBox = false
 
 var alpha = 1.0f
 
-' DEBUG: Testing how those two properties affect all controlsnot 
+' DEBUG: Testing how those two properties affect all controls!
 'GuiSetStyle(DEFAULT, TEXT_PADDING, 0)
 'GuiSetStyle(DEFAULT, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER)
 
@@ -202,7 +200,7 @@ while (not exitWindow)    ' Detect window close button or ESC key
 
         ' First GUI column
         'GuiSetStyle(CHECKBOX, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT)
-        GuiCheckBox(type<Rectangle>( 25, 108, 15, 15 ), "FORCE CHECKnot ", @forceSquaredChecked)
+        GuiCheckBox(type<Rectangle>( 25, 108, 15, 15 ), "FORCE CHECK! ", @forceSquaredChecked)
 
         GuiSetStyle(TEXTBOX, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER)
         'GuiSetStyle(VALUEBOX, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT)
@@ -247,31 +245,31 @@ while (not exitWindow)    ' Detect window close button or ESC key
         GuiSetState(STATE_NORMAL)
         'GuiUnlock()
 
-        GuiComboBox(type<Rectangle>( 25, 480, 125, 30 ), "defaultJungleLavandaDarkBluishCyberTerminal", @visualStyleActive)
+        GuiComboBox(type<Rectangle>( 25, 480, 125, 30 ), "default;Jungle;Lavanda;Dark;Bluish;Cyber;Terminal", @visualStyleActive)
 
         ' NOTE: GuiDropdownBox must draw after any other control that can be covered on unfolding
         GuiUnlock()
         GuiSetStyle(DROPDOWNBOX, TEXT_PADDING, 4)
         GuiSetStyle(DROPDOWNBOX, TEXT_ALIGNMENT, TEXT_ALIGN_LEFT)
-        if (GuiDropdownBox(type<Rectangle>( 25, 65, 125, 30 ), "#01#ONE#02#TWO#03#THREE#04#FOUR", @dropdownBox001Active, dropDown001EditMode)) then
+        if (GuiDropdownBox(type<Rectangle>( 25, 65, 125, 30 ), "#01#ONE;#02#TWO;#03#THREE;#04#FOUR", @dropdownBox001Active, dropDown001EditMode)) then
             dropDown001EditMode = not dropDown001EditMode
         end if
         GuiSetStyle(DROPDOWNBOX, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER)
         GuiSetStyle(DROPDOWNBOX, TEXT_PADDING, 0)
 
-        if (GuiDropdownBox(type<Rectangle>( 25, 25, 125, 30 ), "ONETWOTHREE", @dropdownBox000Active, dropDown000EditMode)) then
+        if (GuiDropdownBox(type<Rectangle>( 25, 25, 125, 30 ), "ONE;TWO;THREE", @dropdownBox000Active, dropDown000EditMode)) then
             dropDown000EditMode = not dropDown000EditMode
         end if
 
         ' Second GUI column
-        GuiListView(type<Rectangle>( 165, 25, 140, 124 ), "CharmanderBulbasaur#18#SquirtelPikachuEeveePidgey", @listViewScrollIndex, @listViewActive)
+        GuiListView(type<Rectangle>( 165, 25, 140, 124 ), "Charmander;Bulbasaur;#18#;Squirtel;Pikachu;Eevee;Pidgey", @listViewScrollIndex, @listViewActive)
         GuiListViewEx(type<Rectangle>( 165, 162, 140, 184 ), @listViewExList(0), 8, @listViewExScrollIndex, @listViewExActive, @listViewExFocus)
 
         'GuiToggle(type<Rectangle>( 165, 400, 140, 25 ), "#1#ONE", @toggleGroupActive)
-        GuiToggleGroup(type<Rectangle>( 165, 360, 140, 24 ), "#1#ONE\n#3#TWO\n#8#THREE\n#23#", @toggleGroupActive)
+        GuiToggleGroup(type<Rectangle>( 165, 360, 140, 24 ), !"#1#ONE\n#3#TWO\n#8#THREE\n#23#", @toggleGroupActive)
         'GuiDisable()
         GuiSetStyle(SLIDER_, SLIDER_PADDING, 2)
-        GuiToggleSlider(type<Rectangle>( 165, 480, 140, 30 ), "ONOFF", @toggleSliderActive)
+        GuiToggleSlider(type<Rectangle>( 165, 480, 140, 30 ), "ON;OFF", @toggleSliderActive)
         GuiSetStyle(SLIDER_, SLIDER_PADDING, 0)
 
         ' Third GUI column
@@ -309,7 +307,7 @@ while (not exitWindow)    ' Detect window close button or ESC key
 
         if (showMessageBox) then
             DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(RAYWHITE, 0.8f))
-            var result = GuiMessageBox(type<Rectangle>( GetScreenWidth()/2 - 125, GetScreenHeight()/2 - 50, 250, 100 ), GuiIconText(ICON_EXIT, "Close Window"), "Do you really want to exit?", "YesNo")
+            var result = GuiMessageBox(type<Rectangle>( GetScreenWidth()/2 - 125, GetScreenHeight()/2 - 50, 250, 100 ), GuiIconText(ICON_EXIT, "Close Window"), "Do you really want to exit?", "Yes;No")
 
             if ((result = 0) OR (result = 2)) then
                 showMessageBox = false
@@ -321,7 +319,7 @@ while (not exitWindow)    ' Detect window close button or ESC key
         if (showTextInputBox) then
         
             DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(RAYWHITE, 0.8f))
-            var result = GuiTextInputBox(type<Rectangle>( GetScreenWidth()/2 - 120, GetScreenHeight()/2 - 60, 240, 140 ), GuiIconText(ICON_FILE_SAVE, "Save file as..."), "Introduce output file name:", "OkCancel", textInput, 255, NULL)
+            var result = GuiTextInputBox(type<Rectangle>( GetScreenWidth()/2 - 120, GetScreenHeight()/2 - 60, 240, 140 ), GuiIconText(ICON_FILE_SAVE, "Save file as..."), "Introduce output file name:", "Ok;Cancel", textInput, 255, NULL)
 
             if (result = 1) then
             
@@ -333,7 +331,7 @@ while (not exitWindow)    ' Detect window close button or ESC key
             if ((result = 0) OR (result = 1) OR (result = 2)) then
             
                 showTextInputBox = false
-                TextCopy(textInput, "\0")
+                TextCopy(textInput, !"\0")
             end if
         end if
         '----------------------------------------------------------------------------------
