@@ -1,0 +1,17 @@
+fbc64 -i ../include -p ../lib/win64 -w all -exx -g 2d_camera_platformer.bas
+fbc64 -i ../include -p ../lib/win64 -w all -exx -g 2d_camera_split_screen.bas
+fbc64 -i ../include -p ../lib/win64 -w all -exx -g 2d_camera.bas
+fbc64 -i ../include -p ../lib/win64 -w all -exx -g 3d_camera_first_person.bas
+fbc64 -i ../include -p ../lib/win64 -w all -exx -g 3d_camera_free.bas
+fbc64 -i ../include -p ../lib/win64 -w all -exx -g 3d_camera_mode.bas
+fbc64 -i ../include -p ../lib/win64 -w all -exx -g 3d_camera_split_screen.bas
+fbc64 -i ../include -p ../lib/win64 -w all -exx -g 3d_picking.bas
+fbc64 -i ../include -p ../lib/win64 -w all -exx -g basic_screen_manager.bas
+fbc64 -i ../include -p ../lib/win64 -w all -exx -g basic.bas
+fbc64 -i ../include -p ../lib/win64 -w all -exx -g bullet_hell.bas
+fbc64 -i ../include -p ../lib/win64 -w all -exx -g delta_time.bas
+fbc64 -i ../include -p ../lib/win64 -w all -exx -g input_gamepad_info.bas
+fbc64 -i ../include -p ../lib/win64 -w all -exx -g kaleidoscope.bas
+fbc64 -i ../include -p ../lib/win64 -w all -exx -g raygui_control_test_suite.bas
+fbc64 -i ../include -p ../lib/win64 -w all -exx -g raygui_simple.bas
+fbc64 -i ../include -p ../lib/win64 -w all -exx -g shaders_basic_lighting.bas
