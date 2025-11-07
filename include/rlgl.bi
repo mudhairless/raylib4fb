@@ -492,103 +492,103 @@ declare sub rlSetBlendFactorsSeparate(byval glSrcRGB as long, byval glDstRGB as 
 declare sub rlglInit(byval width_ as long, byval height as long)             ' Initialize rlgl (buffers, shaders, textures, states)
 declare sub rlglClose()                             ' De-initialize rlgl (buffers, shaders, textures)
 declare sub rlLoadExtensions(void *loader)              ' Load OpenGL extensions (loader function required)
-RLAPI int rlGetVersion()                           ' Get current OpenGL version
+declare function rlGetVersion() as long                          ' Get current OpenGL version
 declare sub rlSetFramebufferWidth(byval width_ as long)            ' Set current framebuffer width
-RLAPI int rlGetFramebufferWidth()                  ' Get default framebuffer width
+declare function rlGetFramebufferWidth() as long                 ' Get default framebuffer width
 declare sub rlSetFramebufferHeight(byval height as long)          ' Set current framebuffer height
-RLAPI int rlGetFramebufferHeight()                 ' Get default framebuffer height
+declare function rlGetFramebufferHeight() as long                ' Get default framebuffer height
 
-RLAPI unsigned int rlGetTextureIdDefault()         ' Get default texture id
-RLAPI unsigned int rlGetShaderIdDefault()          ' Get default shader id
-RLAPI int *rlGetShaderLocsDefault()                ' Get default shader locations
+declare function rlGetTextureIdDefault() as ulong         ' Get default texture id
+declare function rlGetShaderIdDefault() as ulong         ' Get default shader id
+declare function rlGetShaderLocsDefault() as long ptr               ' Get default shader locations
 
 ' Render batch management
 ' NOTE: rlgl provides a default render batch to behave like OpenGL 1.1 immediate mode
 ' but this render batch API is exposed in case of custom batches are required
-RLAPI rlRenderBatch rlLoadRenderBatch(int numBuffers, int bufferElements) ' Load a render batch system
-declare sub rlUnloadRenderBatch(rlRenderBatch batch)    ' Unload render batch system
-declare sub rlDrawRenderBatch(rlRenderBatch *batch)     ' Draw render batch data (Update->Draw->Reset)
-declare sub rlSetRenderBatchActive(rlRenderBatch *batch) ' Set the active render batch for rlgl (NULL for default internal)
+declare function rlLoadRenderBatch(byval numBuffers as long, byval bufferElements as long) as rlRenderBatch ' Load a render batch system
+declare sub rlUnloadRenderBatch(byval batch as rlRenderBatch)    ' Unload render batch system
+declare sub rlDrawRenderBatch(byval batch as rlRenderBatch ptr)     ' Draw render batch data (Update->Draw->Reset)
+declare sub rlSetRenderBatchActive(byval batch as rlRenderBatch ptr) ' Set the active render batch for rlgl (NULL for default internal)
 declare sub rlDrawRenderBatchActive()               ' Update and draw internal render batch
-RLAPI byval r as booleanlCheckRenderBatchLimit(int vCount)         ' Check internal buffer overflow for a given number of vertex
+declare function rlCheckRenderBatchLimit(byval vCount as long) as boolean         ' Check internal buffer overflow for a given number of vertex
 
 declare sub rlSetTexture(byval id as ulong)               ' Set current texture for render batch and check buffers limits
 
 '------------------------------------------------------------------------------------------------------------------------
 
 ' Vertex buffers management
-RLAPI unsigned int rlLoadVertexArray()             ' Load vertex array (vao) if supported
-RLAPI unsigned int rlLoadVertexBuffer( byval buffer as const any ptr, int size, bool dynamic) ' Load a vertex buffer object
-RLAPI unsigned int rlLoadVertexBufferElement( byval buffer as const any ptr, int size, bool dynamic) ' Load vertex buffer elements object
-declare sub rlUpdateVertexBuffer(unsigned int bufferId, const void *data, int dataSize, int offset) ' Update vertex buffer object data on GPU buffer
-declare sub rlUpdateVertexBufferElements(byval id as ulong, const void *data, int dataSize, int offset) ' Update vertex buffer elements data on GPU buffer
+declare function rlLoadVertexArray() as ulong            ' Load vertex array (vao) if supported
+declare function rlLoadVertexBuffer( byval buffer as const any ptr, byval size as long, byval dynamic_ as boolean) as ulong' Load a vertex buffer object
+declare function rlLoadVertexBufferElement( byval buffer as const any ptr, byval size as long, byval dynamic_ as boolean) as ulong' Load vertex buffer elements object
+declare sub rlUpdateVertexBuffer(byval bufferId as ulong, byval data_ as const any ptr, byval dataSize as long, byval offset as long) ' Update vertex buffer object data on GPU buffer
+declare sub rlUpdateVertexBufferElements(byval id as ulong, byval data_ as const any ptr, byval dataSize as long, byval offset as long) ' Update vertex buffer elements data on GPU buffer
 declare sub rlUnloadVertexArray(byval vaoId as ulong)     ' Unload vertex array (vao)
-declare sub rlUnloadVertexBuffer(unsigned int vboId)    ' Unload vertex buffer object
-declare sub rlSetVertexAttribute(byval index as ulong, int compSize, int type, bool normalized, int stride, int offset) ' Set vertex attribute data configuration
-declare sub rlSetVertexAttributeDivisor(byval index as ulong, int divisor) ' Set vertex attribute data divisor
-declare sub rlSetVertexAttributeDefault(int locIndex, const void *value, int attribType, byval count as long) ' Set vertex attribute default value, when attribute to provided
-declare sub rlDrawVertexArray(int offset, byval count as long)    ' Draw vertex array (currently active vao)
-declare sub rlDrawVertexArrayElements(int offset, byval count as long, const byval buffer as any ptr) ' Draw vertex array elements
-declare sub rlDrawVertexArrayInstanced(int offset, byval count as long, int instances) ' Draw vertex array (currently active vao) with instancing
-declare sub rlDrawVertexArrayElementsInstanced(int offset, byval count as long, const byval buffer as any ptr, int instances) ' Draw vertex array elements with instancing
+declare sub rlUnloadVertexBuffer(byval vboId as ulong)    ' Unload vertex buffer object
+declare sub rlSetVertexAttribute(byval index as ulong, byval compSize as long, byval type_ as long, byval normalized as boolean, byval stride as long, byval offset as long) ' Set vertex attribute data configuration
+declare sub rlSetVertexAttributeDivisor(byval index as ulong, byval divisor as long) ' Set vertex attribute data divisor
+declare sub rlSetVertexAttributeDefault(byval locIndex as long, byval value as const any ptr, byval attribType as long, byval count as long) ' Set vertex attribute default value, when attribute to provided
+declare sub rlDrawVertexArray(byval offset as long, byval count as long)    ' Draw vertex array (currently active vao)
+declare sub rlDrawVertexArrayElements(byval offset as long, byval count as long,  byval buffer as const any ptr) ' Draw vertex array elements
+declare sub rlDrawVertexArrayInstanced(byval offset as long, byval count as long, byval instances as long) ' Draw vertex array (currently active vao) with instancing
+declare sub rlDrawVertexArrayElementsInstanced(byval offset as long, byval count as long,  byval buffer as const any ptr, byval instances as long) ' Draw vertex array elements with instancing
 
 ' Textures management
-RLAPI unsigned int rlLoadTexture(const void *data, byval width_ as long, byval height as long, int format, int mipmapCount) ' Load texture data
-RLAPI unsigned int rlLoadTextureDepth(byval width_ as long, byval height as long, bool useRenderBuffer) ' Load depth texture/renderbuffer (to be attached to fbo)
-RLAPI unsigned int rlLoadTextureCubemap(const void *data, int size, int format, int mipmapCount) ' Load texture cubemap data
-declare sub rlUpdateTexture(byval id as ulong, int offsetX, int offsetY, byval width_ as long, byval height as long, int format, const void *data) ' Update texture with new data on GPU
-declare sub rlGetGlTextureFormats(int format, unsigned int *glInternalFormat, unsigned int *glFormat, unsigned int *glType) ' Get OpenGL internal formats
-RLAPI const char *rlGetPixelFormatName(unsigned int format)              ' Get name string for pixel format
+declare function rlLoadTexture(byval data_ as const any ptr, byval width_ as long, byval height as long, byval format_ as long, byval mipmapCount as long) as ulong ' Load texture data
+declare function rlLoadTextureDepth(byval width_ as long, byval height as long, byval useRenderBuffer as boolean) as ulong ' Load depth texture/renderbuffer (to be attached to fbo)
+declare function rlLoadTextureCubemap(byval data_ as const any ptr, byval size as long, byval format_ as long, byval mipmapCount as long) as ulong ' Load texture cubemap data
+declare sub rlUpdateTexture(byval id as ulong, byval offset as longX, byval offset as longY, byval width_ as long, byval height as long, byval format_ as long, byval data_ as const any ptr) ' Update texture with new data on GPU
+declare sub rlGetGlTextureFormats(byval format_ as long, byval glInternalFormat as ulong ptr, byval glFormat as ulong ptr, byval glType as ulong ptr) ' Get OpenGL internal formats
+declare function rlGetPixelFormatName(byval format_ as ulong) as const zstring ptr             ' Get name string for pixel format
 declare sub rlUnloadTexture(byval id as ulong)                              ' Unload texture from GPU memory
-declare sub rlGenTextureMipmaps(byval id as ulong, byval width_ as long, byval height as long, int format, int *mipmaps) ' Generate mipmap data for selected texture
-declare sub *rlReadTexturePixels(byval id as ulong, byval width_ as long, byval height as long, int format) ' Read texture pixel data
-RLAPI unsigned char *rlReadScreenPixels(byval width_ as long, byval height as long)           ' Read screen pixel data (color buffer)
+declare sub rlGenTextureMipmaps(byval id as ulong, byval width_ as long, byval height as long, byval format_ as long, byval mipmaps as long ptr) ' Generate mipmap data for selected texture
+declare function rlReadTexturePixels(byval id as ulong, byval width_ as long, byval height as long, byval format_ as long) as any ptr' Read texture pixel data
+declare function rlReadScreenPixels(byval width_ as long, byval height as long) as ubyte ptr           ' Read screen pixel data (color buffer)
 
 ' Framebuffer management (fbo)
-RLAPI unsigned int rlLoadFramebuffer()                               ' Load an empty framebuffer
-declare sub rlFramebufferAttach(unsigned int fboId, unsigned int texId, int attachType, int texType, int mipLevel) ' Attach texture/renderbuffer to a framebuffer
-RLAPI byval r as booleanlFramebufferComplete(byval id as ulong)                        ' Verify framebuffer is complete
+declare function rlLoadFramebuffer() as ulong                              ' Load an empty framebuffer
+declare sub rlFramebufferAttach(byval fboId as ulong, byval texId as ulong, byval attachType as long, byval texType as long, byval mipLevel as long) ' Attach texture/renderbuffer to a framebuffer
+declare function rlFramebufferComplete(byval id as ulong) as boolean                        ' Verify framebuffer is complete
 declare sub rlUnloadFramebuffer(byval id as ulong)                          ' Delete framebuffer from GPU
 
 ' Shaders management
-RLAPI unsigned int rlLoadShaderCode(const char *vsCode, const char *fsCode)    ' Load shader from code strings
-RLAPI unsigned int rlCompileShader(const char *shaderCode, int type)           ' Compile custom shader and return shader id (type: RL_VERTEX_SHADER, RL_FRAGMENT_SHADER, RL_COMPUTE_SHADER)
-RLAPI unsigned int rlLoadShaderProgram(unsigned int vShaderId, unsigned int fShaderId) ' Load custom shader program
+declare function rlLoadShaderCode(byval vsCode as const zstring ptr, byval fsCode as const zstring ptr) as ulong    ' Load shader from code strings
+declare function rlCompileShader(byval shaderCode as const zstring ptr, byval type_ as long) as ulong           ' Compile custom shader and return shader id (type: RL_VERTEX_SHADER, RL_FRAGMENT_SHADER, RL_COMPUTE_SHADER)
+declare function rlLoadShaderProgram(byval vShaderId as ulong, byval fShaderId as ulong) as ulong ' Load custom shader program
 declare sub rlUnloadShaderProgram(byval id as ulong)                              ' Unload shader program
-RLAPI int rlGetLocationUniform(unsigned int shaderId, const char *uniformName) ' Get shader location uniform
-RLAPI int rlGetLocationAttrib(unsigned int shaderId, const char *attribName)   ' Get shader location attribute
-declare sub rlSetUniform(int locIndex, const void *value, int uniformType, byval count as long) ' Set shader value uniform
-declare sub rlSetUniformMatrix(int locIndex, Matrix mat)                        ' Set shader value matrix
-declare sub rlSetUniformMatrices(int locIndex, const Matrix *mat, byval count as long)    ' Set shader value matrices
-declare sub rlSetUniformSampler(int locIndex, unsigned int textureId)           ' Set shader value sampler
-declare sub rlSetShader(byval id as ulong, int *locs)                             ' Set shader currently active (id and locations)
+declare function rlGetLocationUniform(byval shaderId as ulong, byval uniformName as const zstring ptr) as long ' Get shader location uniform
+declare function rlGetLocationAttrib(byval shaderId as ulong, byval attribName as const zstring ptr) as long   ' Get shader location attribute
+declare sub rlSetUniform(byval locIndex as long, byval value as const any ptr, byval uniformType as long, byval count as long) ' Set shader value uniform
+declare sub rlSetUniformMatrix(byval locIndex as long, byval mat as Matrix)                        ' Set shader value matrix
+declare sub rlSetUniformMatrices(byval locIndex as long, byval mat as const Matrix ptr, byval count as long)    ' Set shader value matrices
+declare sub rlSetUniformSampler(byval locIndex as long, byval textureId as ulong)           ' Set shader value sampler
+declare sub rlSetShader(byval id as ulong, byval locs as long ptr)                             ' Set shader currently active (id and locations)
 
 ' Compute shader management
-RLAPI unsigned int rlLoadComputeShaderProgram(unsigned int shaderId)           ' Load compute shader program
-declare sub rlComputeShaderDispatch(unsigned int groupX, unsigned int groupY, unsigned int groupZ) ' Dispatch compute shader (equivalent to *draw* for graphics pipeline)
+declare function rlLoadComputeShaderProgram(byval shaderId as ulong) as ulong           ' Load compute shader program
+declare sub rlComputeShaderDispatch(byval groupX as ulong, byval groupY as ulong, byval groupZ as ulong) ' Dispatch compute shader (equivalent to *draw* for graphics pipeline)
 
 ' Shader buffer storage object management (ssbo)
-RLAPI unsigned int rlLoadShaderBuffer(unsigned int size, const void *data, int usageHint) ' Load shader storage buffer object (SSBO)
-declare sub rlUnloadShaderBuffer(unsigned int ssboId)                           ' Unload shader storage buffer object (SSBO)
-declare sub rlUpdateShaderBuffer(byval id as ulong, const void *data, unsigned int dataSize, unsigned int offset) ' Update SSBO buffer data
+declare function rlLoadShaderBuffer(byval size as ulong, byval data_ as const any ptr, byval usageHint as long) as ulong ' Load shader storage buffer object (SSBO)
+declare sub rlUnloadShaderBuffer(byval ssboId as ulong)                           ' Unload shader storage buffer object (SSBO)
+declare sub rlUpdateShaderBuffer(byval id as ulong, byval data_ as const any ptr, byval dataSize as ulong, byval offset as ulong) ' Update SSBO buffer data
 declare sub rlBindShaderBuffer(byval id as ulong, byval index as ulong)             ' Bind SSBO buffer
-declare sub rlReadShaderBuffer(byval id as ulong, void *dest, unsigned byval count as long, unsigned int offset) ' Read SSBO buffer data (GPU->CPU)
-declare sub rlCopyShaderBuffer(unsigned int destId, unsigned int srcId, unsigned int destOffset, unsigned int srcOffset, unsigned byval count as long) ' Copy SSBO data between buffers
-RLAPI unsigned int rlGetShaderBufferSize(byval id as ulong)                      ' Get SSBO buffer size
+declare sub rlReadShaderBuffer(byval id as ulong, byval dest as any ptr, byval count as ulong, byval offset as ulong) ' Read SSBO buffer data (GPU->CPU)
+declare sub rlCopyShaderBuffer(byval destId as ulong, byval srcId as ulong, byval destOffset as ulong, byval srcOffset as ulong, byval count as ulong) ' Copy SSBO data between buffers
+declare function rlGetShaderBufferSize(byval id as ulong) as ulong                     ' Get SSBO buffer size
 
 ' Buffer management
-declare sub rlBindImageTexture(byval id as ulong, byval index as ulong, int format, byval r as booleaneadonly)  ' Bind image texture
+declare sub rlBindImageTexture(byval id as ulong, byval index as ulong, byval format_ as long, byval readonly as boolean)  ' Bind image texture
 
 ' Matrix state management
-RLAPI Matrix rlGetMatrixModelview()                                  ' Get internal modelview matrix
-RLAPI Matrix rlGetMatrixProjection()                                 ' Get internal projection matrix
-RLAPI Matrix rlGetMatrixTransform()                                  ' Get internal accumulated transform matrix
-RLAPI Matrix rlGetMatrixProjectionStereo(int eye)                        ' Get internal projection matrix for stereo render (selected eye)
-RLAPI Matrix rlGetMatrixViewOffsetStereo(int eye)                        ' Get internal view offset matrix for stereo render (selected eye)
-declare sub rlSetMatrixProjection(Matrix proj)                            ' Set a custom projection matrix (replaces internal projection matrix)
-declare sub rlSetMatrixModelview(Matrix view)                             ' Set a custom modelview matrix (replaces internal modelview matrix)
-declare sub rlSetMatrixProjectionStereo(Matrix right, Matrix left)        ' Set eyes projection matrices for stereo rendering
-declare sub rlSetMatrixViewOffsetStereo(Matrix right, Matrix left)        ' Set eyes view offsets matrices for stereo rendering
+declare function rlGetMatrixModelview() as Matrix                                  ' Get internal modelview matrix
+declare function rlGetMatrixProjection() as Matrix                                 ' Get internal projection matrix
+declare function rlGetMatrixTransform() as Matrix                                  ' Get internal accumulated transform matrix
+declare function rlGetMatrixProjectionStereo(byval eye as long) as Matrix                        ' Get internal projection matrix for stereo render (selected eye)
+declare function rlGetMatrixViewOffsetStereo(byval eye as long) as Matrix                        ' Get internal view offset matrix for stereo render (selected eye)
+declare sub rlSetMatrixProjection(byval proj as Matrix)                            ' Set a custom projection matrix (replaces internal projection matrix)
+declare sub rlSetMatrixModelview(byval view_ as Matrix)                             ' Set a custom modelview matrix (replaces internal modelview matrix)
+declare sub rlSetMatrixProjectionStereo(byval right_ as Matrix, byval left_ as Matrix)        ' Set eyes projection matrices for stereo rendering
+declare sub rlSetMatrixViewOffsetStereo(byval right_ as Matrix, byval left_ as Matrix)        ' Set eyes view offsets matrices for stereo rendering
 
 ' Quick and dirty cube/quad buffers load->draw->unload
 declare sub rlLoadDrawCube()     ' Load and draw a cube
