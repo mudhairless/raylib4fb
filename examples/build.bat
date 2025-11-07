@@ -15,3 +15,10 @@ fbc64 -i ../include -p ../lib/win64 -w all -exx -g kaleidoscope.bas
 fbc64 -i ../include -p ../lib/win64 -w all -exx -g raygui_control_test_suite.bas
 fbc64 -i ../include -p ../lib/win64 -w all -exx -g raygui_simple.bas
 fbc64 -i ../include -p ../lib/win64 -w all -exx -g shaders_basic_lighting.bas
+fbc64 -i ../include -p ../lib/win64 -w all -exx -g scissor_test.bas
+fbc64 -i ../include -p ../lib/win64 -w all -exx -g smooth_pixel_perfect.bas
+fbc64 -i ../include -p ../lib/win64 -w all -exx -g models_first_person_maze.bas
+fbc64 -i ../include -p ../lib/win64 -w all -exx -g models_animation.bas
+fbc64 -i ../include -p ../lib/win64 -w all -exx -g models_billboard.bas
+fbc64 -i ../include -p ../lib/win64 -w all -exx -g models_box_collisions.bas
+fbc64 -i ../include -p ../lib/win64 -w all -exx -g models_bone_socket.bas
