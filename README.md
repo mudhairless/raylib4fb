@@ -58,25 +58,21 @@ features
 basic example
 --------------
 This is a basic raylib example, it creates a window and draws the text `"Congrats! You created your first window!"` in the middle of the screen. Check this example [running live on web here](https://www.raylib.com/examples/core/loader.html?name=core_basic_window).
-```c
-#include "raylib.h"
+```
+#include "raylib.bi"
 
-int main(void)
-{
-    InitWindow(800, 450, "raylib [core] example - basic window");
+InitWindow(800, 450, "raylib [core] example - basic window")
 
-    while (!WindowShouldClose())
-    {
-        BeginDrawing();
-            ClearBackground(RAYWHITE);
-            DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
-        EndDrawing();
-    }
+while (not WindowShouldClose())
 
-    CloseWindow();
+    BeginDrawing()
+        ClearBackground(RAYWHITE)
+        DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY)
+    EndDrawing()
+wend
 
-    return 0;
-}
+CloseWindow()
+
 ```
 
 build and installation
