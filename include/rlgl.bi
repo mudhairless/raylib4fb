@@ -163,96 +163,96 @@
 
 ' Projection matrix culling
 #ifndef RL_CULL_DISTANCE_NEAR
-    #define RL_CULL_DISTANCE_NEAR                 0.01      ' Default near cull distance
+    #define RL_CULL_DISTANCE_NEAR                 0.01f      ' Default near cull distance
 #endif
 #ifndef RL_CULL_DISTANCE_FAR
-    #define RL_CULL_DISTANCE_FAR                1000.0      ' Default far cull distance
+    #define RL_CULL_DISTANCE_FAR                1000.0f      ' Default far cull distance
 #endif
 
 ' Texture parameters (equivalent to OpenGL defines)
-#define RL_TEXTURE_WRAP_S                       0x2802      ' GL_TEXTURE_WRAP_S
-#define RL_TEXTURE_WRAP_T                       0x2803      ' GL_TEXTURE_WRAP_T
-#define RL_TEXTURE_MAG_FILTER                   0x2800      ' GL_TEXTURE_MAG_FILTER
-#define RL_TEXTURE_MIN_FILTER                   0x2801      ' GL_TEXTURE_MIN_FILTER
+#define RL_TEXTURE_WRAP_S                       &h2802      ' GL_TEXTURE_WRAP_S
+#define RL_TEXTURE_WRAP_T                       &h2803      ' GL_TEXTURE_WRAP_T
+#define RL_TEXTURE_MAG_FILTER                   &h2800      ' GL_TEXTURE_MAG_FILTER
+#define RL_TEXTURE_MIN_FILTER                   &h2801      ' GL_TEXTURE_MIN_FILTER
 
-#define RL_TEXTURE_FILTER_NEAREST               0x2600      ' GL_NEAREST
-#define RL_TEXTURE_FILTER_LINEAR                0x2601      ' GL_LINEAR
-#define RL_TEXTURE_FILTER_MIP_NEAREST           0x2700      ' GL_NEAREST_MIPMAP_NEAREST
-#define RL_TEXTURE_FILTER_NEAREST_MIP_LINEAR    0x2702      ' GL_NEAREST_MIPMAP_LINEAR
-#define RL_TEXTURE_FILTER_LINEAR_MIP_NEAREST    0x2701      ' GL_LINEAR_MIPMAP_NEAREST
-#define RL_TEXTURE_FILTER_MIP_LINEAR            0x2703      ' GL_LINEAR_MIPMAP_LINEAR
-#define RL_TEXTURE_FILTER_ANISOTROPIC           0x3000      ' Anisotropic filter (custom identifier)
-#define RL_TEXTURE_MIPMAP_BIAS_RATIO            0x4000      ' Texture mipmap bias, percentage ratio (custom identifier)
+#define RL_TEXTURE_FILTER_NEAREST               &h2600      ' GL_NEAREST
+#define RL_TEXTURE_FILTER_LINEAR                &h2601      ' GL_LINEAR
+#define RL_TEXTURE_FILTER_MIP_NEAREST           &h2700      ' GL_NEAREST_MIPMAP_NEAREST
+#define RL_TEXTURE_FILTER_NEAREST_MIP_LINEAR    &h2702      ' GL_NEAREST_MIPMAP_LINEAR
+#define RL_TEXTURE_FILTER_LINEAR_MIP_NEAREST    &h2701      ' GL_LINEAR_MIPMAP_NEAREST
+#define RL_TEXTURE_FILTER_MIP_LINEAR            &h2703      ' GL_LINEAR_MIPMAP_LINEAR
+#define RL_TEXTURE_FILTER_ANISOTROPIC           &h3000      ' Anisotropic filter (custom identifier)
+#define RL_TEXTURE_MIPMAP_BIAS_RATIO            &h4000      ' Texture mipmap bias, percentage ratio (custom identifier)
 
-#define RL_TEXTURE_WRAP_REPEAT                  0x2901      ' GL_REPEAT
-#define RL_TEXTURE_WRAP_CLAMP                   0x812F      ' GL_CLAMP_TO_EDGE
-#define RL_TEXTURE_WRAP_MIRROR_REPEAT           0x8370      ' GL_MIRRORED_REPEAT
-#define RL_TEXTURE_WRAP_MIRROR_CLAMP            0x8742      ' GL_MIRROR_CLAMP_EXT
+#define RL_TEXTURE_WRAP_REPEAT                  &h2901      ' GL_REPEAT
+#define RL_TEXTURE_WRAP_CLAMP                   &h812F      ' GL_CLAMP_TO_EDGE
+#define RL_TEXTURE_WRAP_MIRROR_REPEAT           &h8370      ' GL_MIRRORED_REPEAT
+#define RL_TEXTURE_WRAP_MIRROR_CLAMP            &h8742      ' GL_MIRROR_CLAMP_EXT
 
 ' Matrix modes (equivalent to OpenGL)
-#define RL_MODELVIEW                            0x1700      ' GL_MODELVIEW
-#define RL_PROJECTION                           0x1701      ' GL_PROJECTION
-#define RL_TEXTURE                              0x1702      ' GL_TEXTURE
+#define RL_MODELVIEW                            &h1700      ' GL_MODELVIEW
+#define RL_PROJECTION                           &h1701      ' GL_PROJECTION
+#define RL_TEXTURE                              &h1702      ' GL_TEXTURE
 
 ' Primitive assembly draw modes
-#define RL_LINES                                0x0001      ' GL_LINES
-#define RL_TRIANGLES                            0x0004      ' GL_TRIANGLES
-#define RL_QUADS                                0x0007      ' GL_QUADS
+#define RL_LINES                                &h0001      ' GL_LINES
+#define RL_TRIANGLES                            &h0004      ' GL_TRIANGLES
+#define RL_QUADS                                &h0007      ' GL_QUADS
 
 ' GL equivalent data types
-#define RL_UNSIGNED_BYTE                        0x1401      ' GL_UNSIGNED_BYTE
-#define RL_FLOAT                                0x1406      ' GL_FLOAT
+#define RL_UNSIGNED_BYTE                        &h1401      ' GL_UNSIGNED_BYTE
+#define RL_FLOAT                                &h1406      ' GL_FLOAT
 
 ' GL buffer usage hint
-#define RL_STREAM_DRAW                          0x88E0      ' GL_STREAM_DRAW
-#define RL_STREAM_READ                          0x88E1      ' GL_STREAM_READ
-#define RL_STREAM_COPY                          0x88E2      ' GL_STREAM_COPY
-#define RL_STATIC_DRAW                          0x88E4      ' GL_STATIC_DRAW
-#define RL_STATIC_READ                          0x88E5      ' GL_STATIC_READ
-#define RL_STATIC_COPY                          0x88E6      ' GL_STATIC_COPY
-#define RL_DYNAMIC_DRAW                         0x88E8      ' GL_DYNAMIC_DRAW
-#define RL_DYNAMIC_READ                         0x88E9      ' GL_DYNAMIC_READ
-#define RL_DYNAMIC_COPY                         0x88EA      ' GL_DYNAMIC_COPY
+#define RL_STREAM_DRAW                          &h88E0      ' GL_STREAM_DRAW
+#define RL_STREAM_READ                          &h88E1      ' GL_STREAM_READ
+#define RL_STREAM_COPY                          &h88E2      ' GL_STREAM_COPY
+#define RL_STATIC_DRAW                          &h88E4      ' GL_STATIC_DRAW
+#define RL_STATIC_READ                          &h88E5      ' GL_STATIC_READ
+#define RL_STATIC_COPY                          &h88E6      ' GL_STATIC_COPY
+#define RL_DYNAMIC_DRAW                         &h88E8      ' GL_DYNAMIC_DRAW
+#define RL_DYNAMIC_READ                         &h88E9      ' GL_DYNAMIC_READ
+#define RL_DYNAMIC_COPY                         &h88EA      ' GL_DYNAMIC_COPY
 
 ' GL Shader type
-#define RL_FRAGMENT_SHADER                      0x8B30      ' GL_FRAGMENT_SHADER
-#define RL_VERTEX_SHADER                        0x8B31      ' GL_VERTEX_SHADER
-#define RL_COMPUTE_SHADER                       0x91B9      ' GL_COMPUTE_SHADER
+#define RL_FRAGMENT_SHADER                      &h8B30      ' GL_FRAGMENT_SHADER
+#define RL_VERTEX_SHADER                        &h8B31      ' GL_VERTEX_SHADER
+#define RL_COMPUTE_SHADER                       &h91B9      ' GL_COMPUTE_SHADER
 
 ' GL blending factors
 #define RL_ZERO                                 0           ' GL_ZERO
 #define RL_ONE                                  1           ' GL_ONE
-#define RL_SRC_COLOR                            0x0300      ' GL_SRC_COLOR
-#define RL_ONE_MINUS_SRC_COLOR                  0x0301      ' GL_ONE_MINUS_SRC_COLOR
-#define RL_SRC_ALPHA                            0x0302      ' GL_SRC_ALPHA
-#define RL_ONE_MINUS_SRC_ALPHA                  0x0303      ' GL_ONE_MINUS_SRC_ALPHA
-#define RL_DST_ALPHA                            0x0304      ' GL_DST_ALPHA
-#define RL_ONE_MINUS_DST_ALPHA                  0x0305      ' GL_ONE_MINUS_DST_ALPHA
-#define RL_DST_COLOR                            0x0306      ' GL_DST_COLOR
-#define RL_ONE_MINUS_DST_COLOR                  0x0307      ' GL_ONE_MINUS_DST_COLOR
-#define RL_SRC_ALPHA_SATURATE                   0x0308      ' GL_SRC_ALPHA_SATURATE
-#define RL_CONSTANT_COLOR                       0x8001      ' GL_CONSTANT_COLOR
-#define RL_ONE_MINUS_CONSTANT_COLOR             0x8002      ' GL_ONE_MINUS_CONSTANT_COLOR
-#define RL_CONSTANT_ALPHA                       0x8003      ' GL_CONSTANT_ALPHA
-#define RL_ONE_MINUS_CONSTANT_ALPHA             0x8004      ' GL_ONE_MINUS_CONSTANT_ALPHA
+#define RL_SRC_COLOR                            &h0300      ' GL_SRC_COLOR
+#define RL_ONE_MINUS_SRC_COLOR                  &h0301      ' GL_ONE_MINUS_SRC_COLOR
+#define RL_SRC_ALPHA                            &h0302      ' GL_SRC_ALPHA
+#define RL_ONE_MINUS_SRC_ALPHA                  &h0303      ' GL_ONE_MINUS_SRC_ALPHA
+#define RL_DST_ALPHA                            &h0304      ' GL_DST_ALPHA
+#define RL_ONE_MINUS_DST_ALPHA                  &h0305      ' GL_ONE_MINUS_DST_ALPHA
+#define RL_DST_COLOR                            &h0306      ' GL_DST_COLOR
+#define RL_ONE_MINUS_DST_COLOR                  &h0307      ' GL_ONE_MINUS_DST_COLOR
+#define RL_SRC_ALPHA_SATURATE                   &h0308      ' GL_SRC_ALPHA_SATURATE
+#define RL_CONSTANT_COLOR                       &h8001      ' GL_CONSTANT_COLOR
+#define RL_ONE_MINUS_CONSTANT_COLOR             &h8002      ' GL_ONE_MINUS_CONSTANT_COLOR
+#define RL_CONSTANT_ALPHA                       &h8003      ' GL_CONSTANT_ALPHA
+#define RL_ONE_MINUS_CONSTANT_ALPHA             &h8004      ' GL_ONE_MINUS_CONSTANT_ALPHA
 
 ' GL blending functions/equations
-#define RL_FUNC_ADD                             0x8006      ' GL_FUNC_ADD
-#define RL_MIN                                  0x8007      ' GL_MIN
-#define RL_MAX                                  0x8008      ' GL_MAX
-#define RL_FUNC_SUBTRACT                        0x800A      ' GL_FUNC_SUBTRACT
-#define RL_FUNC_REVERSE_SUBTRACT                0x800B      ' GL_FUNC_REVERSE_SUBTRACT
-#define RL_BLEND_EQUATION                       0x8009      ' GL_BLEND_EQUATION
-#define RL_BLEND_EQUATION_RGB                   0x8009      ' GL_BLEND_EQUATION_RGB   ' (Same as BLEND_EQUATION)
-#define RL_BLEND_EQUATION_ALPHA                 0x883D      ' GL_BLEND_EQUATION_ALPHA
-#define RL_BLEND_DST_RGB                        0x80C8      ' GL_BLEND_DST_RGB
-#define RL_BLEND_SRC_RGB                        0x80C9      ' GL_BLEND_SRC_RGB
-#define RL_BLEND_DST_ALPHA                      0x80CA      ' GL_BLEND_DST_ALPHA
-#define RL_BLEND_SRC_ALPHA                      0x80CB      ' GL_BLEND_SRC_ALPHA
-#define RL_BLEND_COLOR                          0x8005      ' GL_BLEND_COLOR
+#define RL_FUNC_ADD                             &h8006      ' GL_FUNC_ADD
+#define RL_MIN                                  &h8007      ' GL_MIN
+#define RL_MAX                                  &h8008      ' GL_MAX
+#define RL_FUNC_SUBTRACT                        &h800A      ' GL_FUNC_SUBTRACT
+#define RL_FUNC_REVERSE_SUBTRACT                &h800B      ' GL_FUNC_REVERSE_SUBTRACT
+#define RL_BLEND_EQUATION                       &h8009      ' GL_BLEND_EQUATION
+#define RL_BLEND_EQUATION_RGB                   &h8009      ' GL_BLEND_EQUATION_RGB   ' (Same as BLEND_EQUATION)
+#define RL_BLEND_EQUATION_ALPHA                 &h883D      ' GL_BLEND_EQUATION_ALPHA
+#define RL_BLEND_DST_RGB                        &h80C8      ' GL_BLEND_DST_RGB
+#define RL_BLEND_SRC_RGB                        &h80C9      ' GL_BLEND_SRC_RGB
+#define RL_BLEND_DST_ALPHA                      &h80CA      ' GL_BLEND_DST_ALPHA
+#define RL_BLEND_SRC_ALPHA                      &h80CB      ' GL_BLEND_SRC_ALPHA
+#define RL_BLEND_COLOR                          &h8005      ' GL_BLEND_COLOR
 
-#define RL_READ_FRAMEBUFFER                     0x8CA8      ' GL_READ_FRAMEBUFFER
-#define RL_DRAW_FRAMEBUFFER                     0x8CA9      ' GL_DRAW_FRAMEBUFFER
+#define RL_READ_FRAMEBUFFER                     &h8CA8      ' GL_READ_FRAMEBUFFER
+#define RL_DRAW_FRAMEBUFFER                     &h8CA9      ' GL_DRAW_FRAMEBUFFER
 
 ' Default shader vertex attribute locations
 #ifndef RL_DEFAULT_SHADER_ATTRIB_LOCATION_POSITION
@@ -390,11 +390,11 @@ declare sub rlLoadIdentity()                        ' Reset current matrix to id
 declare sub rlTranslatef(byval x as single, byval y as single, byval z as single)     ' Multiply the current matrix by a translation matrix
 declare sub rlRotatef(byval angle as single, byval x as single, byval y as single, byval z as single) ' Multiply the current matrix by a rotation matrix
 declare sub rlScalef(byval x as single, byval y as single, byval z as single)         ' Multiply the current matrix by a scaling matrix
-declare sub rlMultMatrixf(const float *matf)            ' Multiply the current matrix by another matrix
+declare sub rlMultMatrixf(byval matf as const single ptr)            ' Multiply the current matrix by another matrix
 declare sub rlFrustum(byval left_ as double, byval right_ as double, byval bottom as double, byval top as double, byval znear as double, byval zfar as double)
 declare sub rlOrtho(byval left_ as double, byval right_ as double, byval bottom as double, byval top as double, byval znear as double, byval zfar as double)
 declare sub rlViewport(byval x as long, byval y as long, byval width_ as long, byval height as long) ' Set the viewport area
-declare sub rlSetClipPlanes(double nearPlane, double farPlane)    ' Set clip planes distances
+declare sub rlSetClipPlanes(byval nearPlane as double, byval farPlane as double)    ' Set clip planes distances
 declare function rlGetCullDistanceNear() as double               ' Get cull plane distance near
 declare function rlGetCullDistanceFar() as double                ' Get cull plane distance far
 
@@ -410,7 +410,7 @@ declare sub rlTexCoord2f(byval x as single, byval y as single)              ' De
 declare sub rlNormal3f(byval x as single, byval y as single, byval z as single)       ' Define one vertex (normal) - 3 float
 declare sub rlColor4ub(byval r as ubyte, byval g as ubyte, byval b as ubyte, byval a as ubyte) ' Define one vertex (color) - 4 byte
 declare sub rlColor3f(byval x as single, byval y as single, byval z as single)        ' Define one vertex (color) - 3 float
-declare sub rlColor4f(byval x as single, byval y as single, byval z as single, float w) ' Define one vertex (color) - 4 float
+declare sub rlColor4f(byval x as single, byval y as single, byval z as single, byval w as single) ' Define one vertex (color) - 4 float
 
 '------------------------------------------------------------------------------------
 ' Functions Declaration - OpenGL style functions (common to 1.1, 3.3+, ES2)
@@ -433,7 +433,7 @@ declare sub rlDisableStatePointer(byval vertexAttribType as long) ' Disable attr
 #endif
 
 ' Textures state
-declare sub rlActiveTextureSlot(int slot)               ' Select and active a texture slot
+declare sub rlActiveTextureSlot(byval slot as long)               ' Select and active a texture slot
 declare sub rlEnableTexture(byval id as ulong)            ' Enable texture
 declare sub rlDisableTexture()                      ' Disable texture
 declare sub rlEnableTextureCubemap(byval id as ulong)     ' Enable texture cubemap
@@ -448,10 +448,10 @@ declare sub rlDisableShader()                       ' Disable shader program
 ' Framebuffer state
 declare sub rlEnableFramebuffer(byval id as ulong)        ' Enable render texture (fbo)
 declare sub rlDisableFramebuffer()                  ' Disable render texture (fbo), return to default framebuffer
-RLAPI unsigned int rlGetActiveFramebuffer()        ' Get the currently active render texture (fbo), 0 for default framebuffer
+declare function rlGetActiveFramebuffer() as ulong        ' Get the currently active render texture (fbo), 0 for default framebuffer
 declare sub rlActiveDrawBuffers(byval count as long)              ' Activate multiple draw color buffers
 declare sub rlBlitFramebuffer(byval srcX as long, byval srcY as long, byval srcWidth as long, byval srcHeight as long, byval dstX as long, byval dstY as long, byval dstWidth as long, byval dstHeight as long, byval bufferMask as long) ' Blit active framebuffer to main framebuffer
-declare sub rlBindFramebuffer(unsigned int target, unsigned int framebuffer) ' Bind framebuffer (FBO)
+declare sub rlBindFramebuffer(byval target_ as ulong, byval framebuffer as ulong) ' Bind framebuffer (FBO)
 
 ' General render state
 declare sub rlEnableColorBlend()                    ' Enable color blending
@@ -471,12 +471,12 @@ declare sub rlEnableWireMode()                      ' Enable wire mode
 declare sub rlEnablePointMode()                     ' Enable pobyval mode as long
 declare sub rlDisableWireMode()                     ' Disable wire (and point) mode
 declare sub rlSetLineWidth(byval width_ as single)                 ' Set the line drawing width
-RLAPI float rlGetLineWidth()                       ' Get the line drawing width
+declare function rlGetLineWidth() as single                      ' Get the line drawing width
 declare sub rlEnableSmoothLines()                   ' Enable line aliasing
 declare sub rlDisableSmoothLines()                  ' Disable line aliasing
 declare sub rlEnableStereoRender()                  ' Enable stereo rendering
 declare sub rlDisableStereoRender()                 ' Disable stereo rendering
-RLAPI bool rlIsStereoRenderEnabled()               ' Check if stereo render is enabled
+declare function rlIsStereoRenderEnabled() as boolean               ' Check if stereo render is enabled
 
 declare sub rlClearColor(byval r as ubyte, byval g as ubyte, byval b as ubyte, byval a as ubyte) ' Clear color buffer with color
 declare sub rlClearScreenBuffers()                  ' Clear used screen buffers (color and depth)
