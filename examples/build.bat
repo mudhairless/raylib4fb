@@ -22,3 +22,4 @@ fbc64 -i ../include -p ../lib/win64 -w all -exx -g models_animation.bas
 fbc64 -i ../include -p ../lib/win64 -w all -exx -g models_billboard.bas
 fbc64 -i ../include -p ../lib/win64 -w all -exx -g models_box_collisions.bas
 fbc64 -i ../include -p ../lib/win64 -w all -exx -g models_bone_socket.bas
+fbc64 -i ../include -p ../lib/win64 -w all -exx -g rres_load_image.bas

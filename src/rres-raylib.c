@@ -1,0 +1,9 @@
+#define RRES_RAYLIB_IMPLEMENTATION
+#define RRES_SUPPORT_COMPRESSION_LZ4
+#define RRES_SUPPORT_ENCRYPTION_AES
+#define RRES_SUPPORT_ENCRYPTION_XCHACHA20
+#define QOI_IMPLEMENTATION
+#include <stdio.h>
+#include "raylib.h"
+#include "rres.h"
+#include "rres-raylib.h"
