@@ -1,16 +1,16 @@
 /'*********************************************************************************************
 *
-*   rlgl v5.0 - A multi-OpenGL abstraction layer with an immediate-mode style API
+*   rlgl v6.0 - A multi-OpenGL abstraction layer with an immediate-mode style API
 *
 *   DESCRIPTION:
 *       An abstraction layer for multiple OpenGL versions (1.1, 2.1, 3.3 Core, 4.3 Core, ES 2.0)
 *       that provides a pseudo-OpenGL 1.1 immediate-mode style API (rlVertex, rlTranslate, rlRotate...)
 *
 *   ADDITIONAL NOTES:
-*       When choosing an OpenGL backend different than OpenGL 1.1, some internal buffer are
+*       When choosing an OpenGL backend different than OpenGL 1.1, some internal buffers are
 *       initialized on rlglInit() to accumulate vertex data
 *
-*       When an internal state change is required all the stored vertex data is renderer in batch,
+*       When an internal state change is required all the stored vertex data is rendered in batch,
 *       additionally, rlDrawRenderBatchActive() could be called to force flushing of the batch
 *
 *       Some resources are also loaded for convenience, here the complete list:
@@ -21,6 +21,7 @@
 *       Internal buffer (and resources) must be manually unloaded calling rlglClose()
 *
 *   CONFIGURATION:
+*       #define GRAPHICS_API_OPENGL_SOFTWARE
 *       #define GRAPHICS_API_OPENGL_11
 *       #define GRAPHICS_API_OPENGL_21
 *       #define GRAPHICS_API_OPENGL_33
@@ -28,17 +29,13 @@
 *       #define GRAPHICS_API_OPENGL_ES2
 *       #define GRAPHICS_API_OPENGL_ES3
 *           Use selected OpenGL graphics backend, should be supported by platform
-*           Those preprocessor defines are only used on rlgl module, if OpenGL version is
+*           Those preprocessor defines are only used on the rlgl module, if OpenGL version is
 *           required by any other module, use rlGetVersion() to check it
 *
 *       #define RLGL_IMPLEMENTATION
 *           Generates the implementation of the library into the included file
 *           If not defined, the library is in header only mode and can be included in other headers
 *           or source files without problems. But only ONE file should hold the implementation
-*
-*       #define RLGL_RENDER_TEXTURES_HINT
-*           Enable framebuffer objects (fbo) support (enabled by default)
-*           Some GPUs could not support them despite the OpenGL version
 *
 *       #define RLGL_SHOW_GL_DETAILS_INFO
 *           Show OpenGL extensions and capabilities detailed logs on init
@@ -56,8 +53,8 @@
 *
 *       #define RL_MAX_MATRIX_STACK_SIZE             32    ' Maximum size of internal Matrix stack
 *       #define RL_MAX_SHADER_LOCATIONS              32    ' Maximum number of shader locations supported
-*       #define RL_CULL_DISTANCE_NEAR              0.01    ' Default projection matrix near cull distance
-*       #define RL_CULL_DISTANCE_FAR             1000.0    ' Default projection matrix far cull distance
+*       #define RL_CULL_DISTANCE_NEAR              0.05    ' Default projection matrix near cull distance
+*       #define RL_CULL_DISTANCE_FAR             4000.0    ' Default projection matrix far cull distance
 *
 *       When loading a shader, the following vertex attributes and uniform
 *       location names are tried to be set automatically:
@@ -68,7 +65,7 @@
 *       #define RL_DEFAULT_SHADER_ATTRIB_NAME_COLOR        "vertexColor"       ' Bound by default to shader location: RL_DEFAULT_SHADER_ATTRIB_LOCATION_COLOR
 *       #define RL_DEFAULT_SHADER_ATTRIB_NAME_TANGENT      "vertexTangent"     ' Bound by default to shader location: RL_DEFAULT_SHADER_ATTRIB_LOCATION_TANGENT
 *       #define RL_DEFAULT_SHADER_ATTRIB_NAME_TEXCOORD2    "vertexTexCoord2"   ' Bound by default to shader location: RL_DEFAULT_SHADER_ATTRIB_LOCATION_TEXCOORD2
-*       #define RL_DEFAULT_SHADER_ATTRIB_NAME_BONEIDS      "vertexBoneIds"     ' Bound by default to shader location: RL_DEFAULT_SHADER_ATTRIB_LOCATION_BONEIDS
+*       #define RL_DEFAULT_SHADER_ATTRIB_NAME_BONEINDICES  "vertexBoneIndices"     ' Bound by default to shader location: RL_DEFAULT_SHADER_ATTRIB_LOCATION_BONEINDICES
 *       #define RL_DEFAULT_SHADER_ATTRIB_NAME_BONEWEIGHTS  "vertexBoneWeights" ' Bound by default to shader location: RL_DEFAULT_SHADER_ATTRIB_LOCATION_BONEWEIGHTS
 *       #define RL_DEFAULT_SHADER_UNIFORM_NAME_MVP         "mvp"               ' model-view-projection matrix
 *       #define RL_DEFAULT_SHADER_UNIFORM_NAME_VIEW        "matView"           ' view matrix
@@ -76,7 +73,7 @@
 *       #define RL_DEFAULT_SHADER_UNIFORM_NAME_MODEL       "matModel"          ' model matrix
 *       #define RL_DEFAULT_SHADER_UNIFORM_NAME_NORMAL      "matNormal"         ' normal matrix (transpose(inverse(matModelView)))
 *       #define RL_DEFAULT_SHADER_UNIFORM_NAME_COLOR       "colDiffuse"        ' color diffuse (base tint color, multiplied by texture color)
-*       #define RL_DEFAULT_SHADER_UNIFORM_NAME_BONE_MATRICES  "boneMatrices"   ' bone matrices
+*       #define RL_DEFAULT_SHADER_UNIFORM_NAME_BONEMATRICES  "boneMatrices"    ' bone matrices
 *       #define RL_DEFAULT_SHADER_SAMPLER2D_NAME_TEXTURE0  "texture0"          ' texture0 (texture slot active 0)
 *       #define RL_DEFAULT_SHADER_SAMPLER2D_NAME_TEXTURE1  "texture1"          ' texture1 (texture slot active 1)
 *       #define RL_DEFAULT_SHADER_SAMPLER2D_NAME_TEXTURE2  "texture2"          ' texture2 (texture slot active 2)
@@ -88,7 +85,7 @@
 *
 *   LICENSE: zlib/libpng
 *
-*   Copyright (c) 2014-2024 Ramon Santamaria (@raysan5)
+*   Copyright (c) 2014-2026 Ramon Santamaria (@raysan5)
 *
 *   This software is provided "as-is", without any express or implied warranty. In no event
 *   will the authors be held liable for any damages arising from the use of this software.
@@ -110,15 +107,21 @@
 #ifndef RLGL_BI
 #define RLGL_BI
 
-#define RLGL_VERSION  "5.0"
+#define RLGL_VERSION  "6.0"
 
-#if not defined(GRAPHICS_API_OPENGL_11) AND _
+#if not defined(GRAPHICS_API_OPENGL_SOFTWARE) AND _
+    not defined(GRAPHICS_API_OPENGL_11) AND _
     not defined(GRAPHICS_API_OPENGL_21) AND _
     not defined(GRAPHICS_API_OPENGL_33) AND _
     not defined(GRAPHICS_API_OPENGL_43) AND _
     not defined(GRAPHICS_API_OPENGL_ES2) AND _
     not defined(GRAPHICS_API_OPENGL_ES3)
         #define GRAPHICS_API_OPENGL_33
+#endif
+
+' Software implementation uses OpenGL 1.1 functionality
+#if defined(GRAPHICS_API_OPENGL_SOFTWARE)
+    #define GRAPHICS_API_OPENGL_11
 #endif
 
 #include once "raymath.bi"
@@ -135,9 +138,9 @@
         #define RL_DEFAULT_BATCH_BUFFER_ELEMENTS  8192
     #endif
     #if defined(GRAPHICS_API_OPENGL_ES2)
-        ' We reduce memory sizes for embedded systems (RPI and HTML5)
+        ' Reducing memory sizes for embedded systems (RPI and HTML5)
         ' NOTE: On HTML5 (emscripten) this is allocated on heap,
-        ' by default it's only 16MB!...just take care...
+        ' by default heap only 16MB!...just take care...
         #define RL_DEFAULT_BATCH_BUFFER_ELEMENTS  2048
     #endif
 #endif
@@ -163,10 +166,10 @@
 
 ' Projection matrix culling
 #ifndef RL_CULL_DISTANCE_NEAR
-    #define RL_CULL_DISTANCE_NEAR                 0.01f      ' Default near cull distance
+    #define RL_CULL_DISTANCE_NEAR                 0.05f      ' Default near cull distance
 #endif
 #ifndef RL_CULL_DISTANCE_FAR
-    #define RL_CULL_DISTANCE_FAR                1000.0f      ' Default far cull distance
+    #define RL_CULL_DISTANCE_FAR                4000.0f      ' Default far cull distance
 #endif
 
 ' Texture parameters (equivalent to OpenGL defines)
@@ -276,14 +279,16 @@
 #ifndef RL_DEFAULT_SHADER_ATTRIB_LOCATION_INDICES
     #define RL_DEFAULT_SHADER_ATTRIB_LOCATION_INDICES     6
 #endif
-#ifdef RL_SUPPORT_MESH_GPU_SKINNING
-#ifndef RL_DEFAULT_SHADER_ATTRIB_LOCATION_BONEIDS
-    #define RL_DEFAULT_SHADER_ATTRIB_LOCATION_BONEIDS     7
+#ifndef RL_DEFAULT_SHADER_ATTRIB_LOCATION_BONEINDICES
+    #define RL_DEFAULT_SHADER_ATTRIB_LOCATION_BONEINDICES     7
 #endif
 #ifndef RL_DEFAULT_SHADER_ATTRIB_LOCATION_BONEWEIGHTS
     #define RL_DEFAULT_SHADER_ATTRIB_LOCATION_BONEWEIGHTS 8
 #endif
+#ifndef RL_DEFAULT_SHADER_ATTRIB_LOCATION_INSTANCETRANSFORM
+    #define RL_DEFAULT_SHADER_ATTRIB_LOCATION_INSTANCETRANSFORM 9
 #endif
+
 
 '----------------------------------------------------------------------------------
 ' Types and Structures Definition
@@ -336,6 +341,7 @@ end type
 
 ' OpenGL version
 enum rlGlVersion
+    RL_OPENGL_SOFTWARE = 0     ' Software OpenGL Renderer
     RL_OPENGL_11 = 1           ' OpenGL 1.1
     RL_OPENGL_21               ' OpenGL 2.1 (GLSL 120)
     RL_OPENGL_33               ' OpenGL 3.3 (GLSL 330)
@@ -427,10 +433,8 @@ declare sub rlEnableVertexBufferElement(byval id as ulong) ' Enable vertex buffe
 declare sub rlDisableVertexBufferElement()          ' Disable vertex buffer element (VBO element)
 declare sub rlEnableVertexAttribute(byval index as ulong) ' Enable vertex attribute index
 declare sub rlDisableVertexAttribute(byval index as ulong) ' Disable vertex attribute index
-#if defined(GRAPHICS_API_OPENGL_11)
 declare sub rlEnableStatePointer(byval vertexAttribType as long, byval buffer as any ptr) ' Enable attribute state pointer
 declare sub rlDisableStatePointer(byval vertexAttribType as long) ' Disable attribute state pointer
-#endif
 
 ' Textures state
 declare sub rlActiveTextureSlot(byval slot as long)               ' Select and active a texture slot
@@ -468,8 +472,12 @@ declare sub rlEnableScissorTest()                   ' Enable scissor test
 declare sub rlDisableScissorTest()                  ' Disable scissor test
 declare sub rlScissor(byval x as long, byval y as long, byval width_ as long, byval height as long) ' Scissor test
 declare sub rlEnableWireMode()                      ' Enable wire mode
-declare sub rlEnablePointMode()                     ' Enable pobyval mode as long
-declare sub rlDisableWireMode()                     ' Disable wire (and point) mode
+declare sub rlDisableWireMode()                     ' Disable wire mode
+declare sub rlEnablePointMode()                     ' Enable pobyval mode
+declare sub rlSetPointSize(byval size_ as single)
+declare function rlGetPointSize() as single
+declare sub rlDisablePointMode()
+
 declare sub rlSetLineWidth(byval width_ as single)                 ' Set the line drawing width
 declare function rlGetLineWidth() as single                      ' Get the line drawing width
 declare sub rlEnableSmoothLines()                   ' Enable line aliasing
@@ -492,6 +500,7 @@ declare sub rlSetBlendFactorsSeparate(byval glSrcRGB as long, byval glDstRGB as 
 declare sub rlglInit(byval width_ as long, byval height as long)             ' Initialize rlgl (buffers, shaders, textures, states)
 declare sub rlglClose()                             ' De-initialize rlgl (buffers, shaders, textures)
 declare sub rlLoadExtensions(void *loader)              ' Load OpenGL extensions (loader function required)
+declare function rlGetProcAddress(byval procName as const zstring ptr) as any ptr     ' Get OpenGL procedure address
 declare function rlGetVersion() as long                          ' Get current OpenGL version
 declare sub rlSetFramebufferWidth(byval width_ as long)            ' Set current framebuffer width
 declare function rlGetFramebufferWidth() as long                 ' Get default framebuffer width
@@ -546,17 +555,22 @@ declare function rlReadScreenPixels(byval width_ as long, byval height as long) 
 
 ' Framebuffer management (fbo)
 declare function rlLoadFramebuffer() as ulong                              ' Load an empty framebuffer
-declare sub rlFramebufferAttach(byval fboId as ulong, byval texId as ulong, byval attachType as long, byval texType as long, byval mipLevel as long) ' Attach texture/renderbuffer to a framebuffer
+declare sub rlFramebufferAttach(byval id as ulong, byval texId as ulong, byval attachType as long, byval texType as long, byval mipLevel as long) ' Attach texture/renderbuffer to a framebuffer
 declare function rlFramebufferComplete(byval id as ulong) as boolean                        ' Verify framebuffer is complete
 declare sub rlUnloadFramebuffer(byval id as ulong)                          ' Delete framebuffer from GPU
+' WARNING: Copy and resize framebuffer functionality only defined for software backend
+declare sub rlCopyFramebuffer(byval x as long, byval y as long, byval width_ as long, byval height as long, byval format_ as long, byval pixels as any ptr) ' Copy framebuffer pixel data to internal buffer
+declare sub rlResizeFramebuffer(byval width_ as long, byval height as long)                    ' Resize internal framebuffer
 
 ' Shaders management
-declare function rlLoadShaderCode(byval vsCode as const zstring ptr, byval fsCode as const zstring ptr) as ulong    ' Load shader from code strings
-declare function rlCompileShader(byval shaderCode as const zstring ptr, byval type_ as long) as ulong           ' Compile custom shader and return shader id (type: RL_VERTEX_SHADER, RL_FRAGMENT_SHADER, RL_COMPUTE_SHADER)
-declare function rlLoadShaderProgram(byval vShaderId as ulong, byval fShaderId as ulong) as ulong ' Load custom shader program
+declare function rlLoadShader(byval code as const zstring ptr, byval type_ as long) as ulong                    ' Load (compile) shader and return shader id (type: RL_VERTEX_SHADER, RL_FRAGMENT_SHADER, RL_COMPUTE_SHADER)
+declare function rlLoadShaderProgram(byval vsCode as const zstring ptr, byval fsCode as const zstring ptr) as ulong ' Load shader from code strings
+declare function rlLoadShaderProgramEx(byval vsId as ulong, byval fsId as ulong) as ulong ' Load shader program, using already loaded shader ids
+declare function rlLoadShaderProgramCompute(byval csId as ulong) as ulong              ' Load compute shader program
+declare sub rlUnloadShader(byval id as ulong)                                     ' Unload shader, loaded with rlLoadShader()
 declare sub rlUnloadShaderProgram(byval id as ulong)                              ' Unload shader program
-declare function rlGetLocationUniform(byval shaderId as ulong, byval uniformName as const zstring ptr) as long ' Get shader location uniform
-declare function rlGetLocationAttrib(byval shaderId as ulong, byval attribName as const zstring ptr) as long   ' Get shader location attribute
+declare function rlGetLocationUniform(byval id as ulong, byval uniformName as const zstring ptr) as long ' Get shader location uniform, requires shader program id
+declare function rlGetLocationAttrib(byval id as ulong, byval attribName as const zstring ptr) as long   ' Get shader location attribute, requires shader program id
 declare sub rlSetUniform(byval locIndex as long, byval value as const any ptr, byval uniformType as long, byval count as long) ' Set shader value uniform
 declare sub rlSetUniformMatrix(byval locIndex as long, byval mat as Matrix)                        ' Set shader value matrix
 declare sub rlSetUniformMatrices(byval locIndex as long, byval mat as const Matrix ptr, byval count as long)    ' Set shader value matrices
@@ -564,7 +578,6 @@ declare sub rlSetUniformSampler(byval locIndex as long, byval textureId as ulong
 declare sub rlSetShader(byval id as ulong, byval locs as long ptr)                             ' Set shader currently active (id and locations)
 
 ' Compute shader management
-declare function rlLoadComputeShaderProgram(byval shaderId as ulong) as ulong           ' Load compute shader program
 declare sub rlComputeShaderDispatch(byval groupX as ulong, byval groupY as ulong, byval groupZ as ulong) ' Dispatch compute shader (equivalent to *draw* for graphics pipeline)
 
 ' Shader buffer storage object management (ssbo)
