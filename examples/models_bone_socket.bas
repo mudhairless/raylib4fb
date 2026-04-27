@@ -59,21 +59,21 @@ var modelAnimations = LoadModelAnimations("resources/models/gltf/greenman.glb", 
 dim as long boneSocketIndex(0 to BONE_SOCKETS - 1) = { -1, -1, -1 }
 
 ' search bones for sockets 
-for i as long = 0 to characterModel.boneCount - 1
+for i as long = 0 to characterModel.skeleton.boneCount - 1
 
-    if (TextIsEqual(characterModel.bones[i].name_, "socket_hat")) then
+    if (TextIsEqual(characterModel.skeleton.bones[i].name_, "socket_hat")) then
     
         boneSocketIndex(BONE_SOCKET_HAT) = i
         continue for
     end if
     
-    if (TextIsEqual(characterModel.bones[i].name_, "socket_hand_R")) then
+    if (TextIsEqual(characterModel.skeleton.bones[i].name_, "socket_hand_R")) then
     
         boneSocketIndex(BONE_SOCKET_HAND_R) = i
         continue for
     end if
     
-    if (TextIsEqual(characterModel.bones[i].name_, "socket_hand_L")) then
+    if (TextIsEqual(characterModel.skeleton.bones[i].name_, "socket_hand_L")) then
     
         boneSocketIndex(BONE_SOCKET_HAND_L) = i
         continue for
@@ -122,7 +122,7 @@ while (not WindowShouldClose())        ' Detect window close button or ESC key
     
     ' Update model animation
     var anim = modelAnimations[animIndex]
-    animCurrentFrame = (animCurrentFrame + 1) mod anim.frameCount
+    animCurrentFrame = (animCurrentFrame + 1) mod anim.keyFrameCount
     UpdateModelAnimation(characterModel, anim, animCurrentFrame)
     '----------------------------------------------------------------------------------
 
@@ -147,7 +147,7 @@ while (not WindowShouldClose())        ' Detect window close button or ESC key
                 end if
 
                 var transform = @anim.framePoses[animCurrentFrame][boneSocketIndex(i)]
-                var inRotation = characterModel.bindPose[boneSocketIndex(i)].rotation
+                var inRotation = characterModel.skeleton.bindPose[boneSocketIndex(i)].rotation
                 var outRotation = transform->rotation
                 
                 ' Calculate socket rotation (angle between bone in initial pose and same bone in current animation frame)

@@ -25,14 +25,13 @@
 *
 *       #define USE_C_IMP
 *           Defines functions to be used with the C implementation of this API.
-*           Automatically disables FB operators.
 *
 *       #define RAYMATH_DISABLE_FB_OPERATORS
 *           Disables FreeBASIC operator overloads for raymath types.
 *
 *   LICENSE: zlib/libpng
 *
-*   Copyright (c) 2015-2024 Ramon Santamaria (@raysan5)
+*   Copyright (c) 2015-2026 Ramon Santamaria (@raysan5)
 *
 *   This software is provided "as-is", without any express or implied warranty. In no event
 *   will the authors be held liable for any damages arising from the use of this software.
@@ -54,15 +53,6 @@
 
 #ifndef RAYMATH_BI
 #define RAYMATH_BI
-
-#ifdef USE_C_IMP
-
-#ifdef RAYMATH_IMPLEMENTATION
-#error "The defines USE_C_IMP and RAYMATH_IMPLEMENTATION cannot be used together."
-#endif
-
-#define RAYMATH_DISABLE_FB_OPERATORS
-#endif
 
 #include once "crt/math.bi"
 
@@ -204,6 +194,7 @@ declare function Vector2SubtractValue(byval v as Vector2, byval subtract as sing
 declare function Vector2Length(byval v as Vector2) as single
 declare function Vector2LengthSqr(byval v as Vector2) as single
 declare function Vector2DotProduct(byval v1 as Vector2, byval v2 as Vector2) as single
+declare function Vector2CrossProduct(byval v1 as Vector2, byval v2 as Vector2) as single
 declare function Vector2Distance(byval v1 as Vector2, byval v2 as Vector2) as single
 declare function Vector2DistanceSqr(byval v1 as Vector2, byval v2 as Vector2) as single
 declare function Vector2Angle(byval v1 as Vector2, byval v2 as Vector2) as single
@@ -320,6 +311,13 @@ declare function Vector4Equals(byval a as Vector4, byval b as Vector4) as boolea
                             0.0f, 0.0f, 0.0f, 1.0f _
                         )
 
+#define MatrixUnit type<Matrix>( _
+                            1.0f, 0.0f, 0.0f, 0.0f, _
+                            0.0f, 1.0f, 0.0f, 0.0f, _
+                            0.0f, 0.0f, 1.0f, 0.0f, _
+                            0.0f, 0.0f, 0.0f, 1.0f _
+                        )
+
 declare function MatrixDeterminate(byval mat as Matrix) as single
 declare function MatrixTrace(byval mat as Matrix) as single
 declare function MatrixTranspose(byval mat as Matrix) as Matrix
@@ -327,6 +325,7 @@ declare function MatrixInvert(byval mat as Matrix) as Matrix
 declare function MatrixAdd(byval left_ as Matrix, byval right_ as Matrix) as Matrix
 declare function MatrixSubtract(byval left_ as Matrix, byval right_ as Matrix) as Matrix
 declare function MatrixMultiply(byval left_ as Matrix, byval right_ as Matrix) as Matrix
+declare function MatrixMultiplyValue(byval left_ as Matrix, byval value as single) as Matrix
 declare function MatrixTranslate(byval x as single, byval y as single, byval z as single) as Matrix
 declare function MatrixRotate(byval axis as Vector3, byval angle as single) as Matrix
 declare function MatrixRotateX(byval angle as single) as Matrix
@@ -372,6 +371,7 @@ declare function QuaternionFromEuler(byval pitch as single, byval yaw as single,
 declare function QuaternionToEuler(byval q as Quaternion) as Vector3
 declare function QuaternionTransform(byval q as Quaternion, byval mat as Matrix) as Quaternion
 declare function QuaternionEquals(byval a as Quaternion, byval b as Quaternion) as boolean
+declare function MatrixCompose( byval translation as Vector3, byval rotation as Quaternion, byval scale as Vector3) as Matrix
 declare sub MatrixDecompose(byval mat as Matrix, byval translation as Vector3 ptr, byval rotation as Quaternion ptr, byval scale as Vector3 ptr)
 
 #ifdef USE_C_IMP
@@ -423,11 +423,12 @@ declare operator * (byval lhs as const Quaternion, byval rhs as const Matrix) as
 declare operator + (byval lhs as const Matrix, byval rhs as const Matrix) as Matrix
 declare operator - (byval lhs as const Matrix, byval rhs as const Matrix) as Matrix
 declare operator * (byval lhs as const Matrix, byval rhs as const Matrix) as Matrix
+declare operator * (byval lhs as const Matrix, byval rhs as const single) as Matrix
 
 #endif 'RAYMATH_DISABLE_FB_OPERATORS
 
 #ifdef RAYMATH_IMPLEMENTATION
-
+#ifndef USE_C_IMP
 function FloatEquals(byval x as single, byval y as single) as boolean
     return (fabsf(x - y)) <= (EPSILON*fmaxf(1.0f, fmaxf(fabsf(x), fabsf(y))))
 end function
@@ -462,6 +463,10 @@ end function
 
 function Vector2DotProduct(byval v1 as Vector2, byval v2 as Vector2) as single
     return (v1.x*v2.x + v1.y*v2.y)
+end function
+
+function Vector2CrossProduct(byval v1 as Vector2, byval v2 as Vector2) as single
+    return (v1.x*v2.y - v1.y*v2.x)
 end function
 
 function Vector2Distance(byval v1 as Vector2, byval v2 as Vector2) as single
@@ -1296,18 +1301,20 @@ end function
 function MatrixDeterminate(byval mat as Matrix) as single
     var result = 0.0f
 
-    ' Cache the matrix values (speed optimization)
-    var a00 = mat.m0, a01 = mat.m1, a02 = mat.m2, a03 = mat.m3
-    var a10 = mat.m4, a11 = mat.m5, a12 = mat.m6, a13 = mat.m7
-    var a20 = mat.m8, a21 = mat.m9, a22 = mat.m10, a23 = mat.m11
-    var a30 = mat.m12, a31 = mat.m13, a32 = mat.m14, a33 = mat.m15
+    ' Using Laplace expansion (https://en.wikipedia.org/wiki/Laplace_expansion),
+    ' previous operation can be simplified to 40 multiplications, decreasing matrix
+    ' size from 4x4 to 2x2 using minors
 
-    result = a30*a21*a12*a03 - a20*a31*a12*a03 - a30*a11*a22*a03 + a10*a31*a22*a03 + _
-             a20*a11*a32*a03 - a10*a21*a32*a03 - a30*a21*a02*a13 + a20*a31*a02*a13 + _
-             a30*a01*a22*a13 - a00*a31*a22*a13 - a20*a01*a32*a13 + a00*a21*a32*a13 + _
-             a30*a11*a02*a23 - a10*a31*a02*a23 - a30*a01*a12*a23 + a00*a31*a12*a23 + _
-             a10*a01*a32*a23 - a00*a11*a32*a23 - a20*a11*a02*a33 + a10*a21*a02*a33 + _
-             a20*a01*a12*a33 - a00*a21*a12*a33 - a10*a01*a22*a33 + a00*a11*a22*a33
+    ' Cache the matrix values (speed optimization)
+    dim as single m0 = mat.m0, m1 = mat.m1, m2 = mat.m2, m3 = mat.m3
+    dim as single m4 = mat.m4, m5 = mat.m5, m6 = mat.m6, m7 = mat.m7
+    dim as single m8 = mat.m8, m9 = mat.m9, m10 = mat.m10, m11 = mat.m11
+    dim as single m12 = mat.m12, m13 = mat.m13, m14 = mat.m14, m15 = mat.m15
+
+    result = (m0*((m5*(m10*m15 - m11*m14) - m9*(m6*m15 - m7*m14) + m13*(m6*m11 - m7*m10))) - _
+        m4*((m1*(m10*m15 - m11*m14) - m9*(m2*m15 - m3*m14) + m13*(m2*m11 - m3*m10))) + _
+        m8*((m1*(m6*m15 - m7*m14) - m5*(m2*m15 - m3*m14) + m13*(m2*m7 - m3*m6))) - _
+        m12*((m1*(m6*m11 - m7*m10) - m5*(m2*m11 - m3*m10) + m9*(m2*m7 - m3*m6))))
 
     return result
 end function
@@ -1451,6 +1458,13 @@ function MatrixMultiply(byval left_ as Matrix, byval right_ as Matrix) as Matrix
     result.m15 = left_.m12*right_.m3 + left_.m13*right_.m7 + left_.m14*right_.m11 + left_.m15*right_.m15
 
     return result
+end function
+
+function MatrixMultiplyValue(byval left_ as Matrix, byval value as single) as Matrix
+        return type<Matrix>( left_.m0*value, left_.m4*value, left_.m8*value, left_.m12*value, _
+                            left_.m1*value, left_.m5*value, left_.m9*value, left_.m13*value, _
+                            left_.m2*value, left_.m6*value, left_.m10*value, left_.m14*value, _
+                            left_.m3*value, left_.m7*value, left_.m11*value, left_.m15*value )
 end function
 
 function MatrixTranslate(byval x as single, byval y as single, byval z as single) as Matrix
@@ -1956,7 +1970,7 @@ function QuaternionFromVector3ToVector3(byval from_ as Vector3, byval to_ as Vec
     result.x = cross.x
     result.y = cross.y
     result.z = cross.z
-    result.w = 1.0f + cos2Theta
+    result.w = sqrtf(cross.x*cross.x + cross.y*cross.y + cross.z*cross.z + cos2Theta*cos2Theta) + cos2Theta
 
     ' NOTE: Normalize to essentially nlerp the original and identity to 0.5
     var q = result
@@ -2063,19 +2077,12 @@ end function
 function QuaternionFromAxisAngle(byval axis as Vector3, byval angle as single) as Quaternion
     var result = QuaternionIdentity
 
-    var axisLength = sqrtf(axis.x*axis.x + axis.y*axis.y + axis.z*axis.z)
+    var length = sqrtf(axis.x*axis.x + axis.y*axis.y + axis.z*axis.z)
 
-    if (axisLength <> 0.0f) then
+    if (length <> 0.0f) then
         angle *= 0.5f
 
-        var length = 0.0f
-        var ilength = 0.0f
-
-        length = axisLength
-        if (length = 0.0f) then
-            length = 1.0f
-        end if
-        ilength = 1.0f/length
+        var ilength = 1.0f/length
         axis.x *= ilength
         axis.y *= ilength
         axis.z *= ilength
@@ -2200,7 +2207,32 @@ function QuaternionEquals(byval p as Quaternion, byval q as Quaternion) as boole
             ((fabsf(p.w + q.w)) <= (EPSILON*fmaxf(1.0f, fmaxf(fabsf(p.w), fabsf(q.w))))))
 end function
 
+function MatrixCompose( byval translation as Vector3, byval rotation as Quaternion, byval scale as Vector3) as Matrix
+
+    ' Initialize vectors
+    var right_ = type<Vector3>(1.0f, 0f, 0f)
+    var up_ = type<Vector3>(0f, 1.0f, 0f)
+    var forward_ = type<Vector3>(0f, 0f, 1.0f)
+
+    ' Scale vectors
+    right_ = Vector3Scale(right_, scale.x)
+    up_ = Vector3Scale(up_, scale.y)
+    forward_ = Vector3Scale(forward_, scale.z)
+
+    ' Rotate vectors
+    right_ = Vector3RotateByQuaternion(right_, rotation)
+    up_ = Vector3RotateByQuaternion(up_, rotation)
+    forward_ = Vector3RotateByQuaternion(forward_, rotation)
+
+    ' Set result matrix output
+    return type<Matrix>( right_.x, up_.x, forward_.x, translation.x, _
+                        right_.y, up_.y, forward_.y, translation.y, _
+                        right_.z, up_.z, forward_.z, translation.z, _
+                        0.0f, 0.0f, 0.0f, 1.0f )
+end function
+
 sub MatrixDecompose(byval mat as Matrix, byval translation as Vector3 ptr, byval rotation as Quaternion ptr, byval scale as Vector3 ptr)
+
     translation->x = mat.m12
     translation->y = mat.m13
     translation->z = mat.m14
@@ -2251,6 +2283,7 @@ sub MatrixDecompose(byval mat as Matrix, byval translation as Vector3 ptr, byval
 
 
 end sub
+#endif 'USE_C_IMP
 
 #ifndef RAYMATH_DISABLE_FB_OPERATORS
 
@@ -2408,6 +2441,10 @@ end operator
 
 operator * (byval lhs as const Matrix, byval rhs as const Matrix) as Matrix
     return MatrixMultiply(lhs, rhs)
+end operator
+
+operator * (byval lhs as const Matrix, byval rhs as const single) as Matrix
+    return MatrixMultiplyValue(lhs, rhs)
 end operator
 
 

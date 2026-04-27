@@ -64,7 +64,7 @@ while (not WindowShouldClose())        ' Detect window close button or ESC key
     
         animFrameCounter += 1
         UpdateModelAnimation(model, anims[0], animFrameCounter)
-        if (animFrameCounter >= anims[0].frameCount) then
+        if (animFrameCounter >= anims[0].keyFrameCount) then
             animFrameCounter = 0
         end if
     end if
@@ -80,7 +80,7 @@ while (not WindowShouldClose())        ' Detect window close button or ESC key
 
             DrawModelEx(model, position, type<Vector3>( 1.0f, 0.0f, 0.0f ), -90.0f, type<Vector3>( 1.0f, 1.0f, 1.0f ), WHITE)
 
-            for i as long = 0 to model.boneCount - 1
+            for i as long = 0 to model.skeleton.boneCount - 1
                 DrawCube(anims[0].framePoses[animFrameCounter][i].translation, 0.2f, 0.2f, 0.2f, RED)
             next i
 

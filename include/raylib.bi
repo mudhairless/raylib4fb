@@ -1,16 +1,16 @@
 /'*********************************************************************************************
 *
-*   raylib v5.5 - A simple and easy-to-use library to enjoy videogames programming (www.raylib.com)
+*   raylib v6.0 - A simple and easy-to-use library to enjoy videogames programming (www.raylib.com)
 *
 *   FEATURES:
 *       - NO external dependencies, all required libraries included with raylib
-*       - Multiplatform: Windows, Linux, FreeBSD, OpenBSD, NetBSD, DragonFly,
-*                        MacOS, Haiku, Android, Raspberry Pi, DRM native, HTML5.
+*       - Multiplatform: Windows, Linux, macOS, FreeBSD, Web, Android, Raspberry Pi, DRM native...
 *       - Written in plain C code (C99) in PascalCase/camelCase notation
 *       - Hardware accelerated with OpenGL (1.1, 2.1, 3.3, 4.3, ES2, ES3 - choose at compile)
-*       - Unique OpenGL abstraction layer (usable as standalone module): [rlgl]
+*       - Software renderer optional, for systems with no GPU: [rlsw]
+*       - Custom OpenGL abstraction layer (usable as standalone module): [rlgl]
 *       - Multiple Fonts formats supported (TTF, OTF, FNT, BDF, Sprite fonts)
-*       - Outstanding texture formats support, including compressed formats (DXT, ETC, ASTC)
+*       - Many texture formats supported, including compressed formats (DXT, ETC, ASTC)
 *       - Full 3d support for 3d Shapes, Models, Billboards, Heightmaps and more!
 *       - Flexible Materials system, supporting classic maps and PBR maps
 *       - Animated 3D models supported (skeletal bones animation) (IQM, M3D, GLTF)
@@ -26,24 +26,23 @@
 *       - One default Shader is loaded on rlglInit()->rlLoadShaderDefault() [rlgl] (OpenGL 3.3 or ES2)
 *       - One default RenderBatch is loaded on rlglInit()->rlLoadRenderBatch() [rlgl] (OpenGL 3.3 or ES2)
 *
-*   DEPENDENCIES (included):
-*       [rcore][GLFW] rglfw (Camilla Löwy - github.com/glfw/glfw) for window/context management and input
-*       [rcore][RGFW] rgfw (ColleagueRiley - github.com/ColleagueRiley/RGFW) for window/context management and input
-*       [rlgl] glad/glad_gles2 (David Herberth - github.com/Dav1dde/glad) for OpenGL 3.3 extensions loading
+*   DEPENDENCIES:
+*       [rcore] Depends on the selected platform backend, check rcore.c header for details
+*       [rlgl] glad/glad_gles2 (David Herberth - github.com/Dav1dde/glad) for OpenGL extensions loading
 *       [raudio] miniaudio (David Reid - github.com/mackron/miniaudio) for audio device/context management
 *
 *   OPTIONAL DEPENDENCIES (included):
-*       [rcore] msf_gif (Miles Fogle) for GIF recording
 *       [rcore] sinfl (Micha Mettke) for DEFLATE decompression algorithm
 *       [rcore] sdefl (Micha Mettke) for DEFLATE compression algorithm
-*       [rcore] rprand (Ramon Snatamaria) for pseudo-random numbers generation
-*       [rtextures] qoi (Dominic Szablewski - https://phoboslab.org) for QOI image manage
-*       [rtextures] stb_image (Sean Barret) for images loading (BMP, TGA, PNG, JPEG, HDR...)
-*       [rtextures] stb_image_write (Sean Barret) for image writing (BMP, TGA, PNG, JPG)
-*       [rtextures] stb_image_resize2 (Sean Barret) for image resizing algorithms
-*       [rtextures] stb_perlin (Sean Barret) for Perlin Noise image generation
-*       [rtext] stb_truetype (Sean Barret) for ttf fonts loading
-*       [rtext] stb_rect_pack (Sean Barret) for rectangles packing
+*       [rcore] rprand (Ramon Santamaria) for pseudo-random numbers generation
+*       [rtextures] qoi (Dominic Szablewski - https://phoboslab.org) for QOI image management
+*       [rtextures] stb_image (Sean Barrett) for images loading (BMP, TGA, PNG, JPEG, HDR...)
+*       [rtextures] stb_image_write (Sean Barrett) for image writing (BMP, TGA, PNG, JPG)
+*       [rtextures] stb_image_resize2 (Sean Barrett) for image resizing algorithms
+*       [rtextures] stb_perlin (Sean Barrett) for Perlin Noise image generation
+*       [rtextures] rltexgpu (Ramon Santamaria) for GPU-compressed texture formats
+*       [rtext] stb_truetype (Sean Barrett) for ttf fonts loading
+*       [rtext] stb_rect_pack (Sean Barrett) for rectangles packing
 *       [rmodels] par_shapes (Philip Rideout) for parametric 3d shapes generation
 *       [rmodels] tinyobj_loader_c (Syoyo Fujita) for models loading (OBJ, MTL)
 *       [rmodels] cgltf (Johannes Kuhlmann) for models loading (glTF)
@@ -52,10 +51,10 @@
 *       [raudio] dr_wav (David Reid) for WAV audio file loading
 *       [raudio] dr_flac (David Reid) for FLAC audio file loading
 *       [raudio] dr_mp3 (David Reid) for MP3 audio file loading
-*       [raudio] stb_vorbis (Sean Barret) for OGG audio loading
+*       [raudio] stb_vorbis (Sean Barrett) for OGG audio loading
 *       [raudio] jar_xm (Joshua Reisenauer) for XM audio module loading
 *       [raudio] jar_mod (Joshua Reisenauer) for MOD audio module loading
-*       [raudio] qoa (Dominic Szablewski - https://phoboslab.org) for QOA audio manage
+*       [raudio] qoa (Dominic Szablewski - https://phoboslab.org) for QOA audio management
 *
 *
 *   LICENSE: zlib/libpng
@@ -63,7 +62,7 @@
 *   raylib is licensed under an unmodified zlib/libpng license, which is an OSI-certified,
 *   BSD-like license that allows static linking with closed source software:
 *
-*   Copyright (c) 2013-2024 Ramon Santamaria (@raysan5)
+*   Copyright (c) 2013-2026 Ramon Santamaria (@raysan5)
 *
 *   This software is provided "as-is", without any express or implied warranty. In no event
 *   will the authors be held liable for any damages arising from the use of this software.
@@ -122,13 +121,13 @@
 
 extern "C"
 
-#define RAYLIB_VERSION_MAJOR 5
-#define RAYLIB_VERSION_MINOR 5
+#define RAYLIB_VERSION_MAJOR 6
+#define RAYLIB_VERSION_MINOR 0
 #define RAYLIB_VERSION_PATCH 0
-#define RAYLIB_VERSION  "5.5"
+#define RAYLIB_VERSION  "6.0"
 
 '----------------------------------------------------------------------------------
-' Some basic Defines
+' Defines and Macros
 '----------------------------------------------------------------------------------
 #ifndef PI
 #define PI 3.14159265358979323846
@@ -176,6 +175,10 @@ extern "C"
 #define BLANK        type<RayColor>( 0, 0, 0, 0 )
 #define MAGENTA      type<RayColor>( 255, 0, 255, 255 )
 #define RAYWHITE     type<RayColor>( 245, 245, 245, 255 )
+
+''----------------------------------------------------------------------------------
+'' Types and Structures Definition
+''----------------------------------------------------------------------------------
 
 type Vector2
     x as single
@@ -312,12 +315,12 @@ type Mesh
 	tangents as single ptr
 	colors as ubyte ptr
 	indices as ushort ptr
+	boneCount as long
+	boneIndices as ubyte ptr
+	boneWeights as single ptr
 	animVertices as single ptr
 	animNormals as single ptr
-	boneIds as ubyte ptr
-	boneWeights as single ptr
-    boneMatrices as Matrix ptr
-    boneCount as long
+	boneIds as ubyte ptr    
 	vaoId as ulong
 	vboId as ulong ptr
 end type
@@ -345,9 +348,17 @@ type Transform
 	scale as Vector3
 end type
 
+type ModelAnimPose as Transform ptr
+
 type BoneInfo
 	name_ as zstring * 32
 	parent as long
+end type
+
+type ModelSkeleton
+	boneCount as long
+	bones as BoneInfo ptr
+	bindPose as ModelAnimPose
 end type
 
 type Model
@@ -357,18 +368,16 @@ type Model
 	meshes as Mesh ptr
 	materials as Material ptr
 	meshMaterial as long ptr
-	boneCount as long
-	bones as BoneInfo ptr
-	bindPose as Transform ptr
+	skeleton as ModelSkeleton
+	currentPose as ModelAnimPose
+	boneMatrices as Matrix ptr
 end type
 
 type ModelAnimation
+	name_ as zstring * 32
 	boneCount as long
-    frameCount as long
-	bones as BoneInfo ptr
-	
-	framePoses as Transform ptr ptr
-    name_ as zstring * 32
+    keyFrameCount as long
+	framePoses as ModelAnimPose ptr
 end type
 
 type Ray
@@ -444,7 +453,6 @@ type VrStereoConfig
 end type
 
 type FilePathList
-    capacity as ulong
     count as ulong
     paths as zstring ptr ptr
 end type
@@ -704,14 +712,15 @@ enum ShaderLocationIndex
     SHADER_LOC_MAP_ROUGHNESS       ' Shader location: sampler2d texture: roughness
     SHADER_LOC_MAP_OCCLUSION       ' Shader location: sampler2d texture: occlusion
     SHADER_LOC_MAP_EMISSION        ' Shader location: sampler2d texture: emission
-    SHADER_LOC_MAP_HEIGHT          ' Shader location: sampler2d texture: height
+    SHADER_LOC_MAP_HEIGHT          ' Shader location: sampler2d texture: heightmap
     SHADER_LOC_MAP_CUBEMAP         ' Shader location: samplerCube texture: cubemap
     SHADER_LOC_MAP_IRRADIANCE      ' Shader location: samplerCube texture: irradiance
     SHADER_LOC_MAP_PREFILTER       ' Shader location: samplerCube texture: prefilter
     SHADER_LOC_MAP_BRDF            ' Shader location: sampler2d texture: brdf
     SHADER_LOC_VERTEX_BONEIDS      ' Shader location: vertex attribute: boneIds
     SHADER_LOC_VERTEX_BONEWEIGHTS  ' Shader location: vertex attribute: boneWeights
-    SHADER_LOC_BONE_MATRICES        ' Shader location: array of matrices uniform: boneMatrices
+    SHADER_LOC_MATRIX_BONETRANSFORMS ' Shader location: matrix attribute: bone transforms (animation)
+    SHADER_LOC_VERTEX_INSTANCETRANSFORM ' Shader location: vertex attribute: instance transforms
 end enum
 
 #define SHADER_LOC_MAP_DIFFUSE      SHADER_LOC_MAP_ALBEDO
@@ -726,6 +735,10 @@ enum ShaderUniformDataType
     SHADER_UNIFORM_IVEC2           ' Shader uniform type: ivec2 (2 int)
     SHADER_UNIFORM_IVEC3           ' Shader uniform type: ivec3 (3 int)
     SHADER_UNIFORM_IVEC4           ' Shader uniform type: ivec4 (4 int)
+	SHADER_UNIFORM_UINT            ' Shader uniform type: unsigned int
+    SHADER_UNIFORM_UIVEC2          ' Shader uniform type: uivec2 (2 unsigned int)
+    SHADER_UNIFORM_UIVEC3          ' Shader uniform type: uivec3 (3 unsigned int)
+    SHADER_UNIFORM_UIVEC4          ' Shader uniform type: uivec4 (4 unsigned int)
     SHADER_UNIFORM_SAMPLER2D        ' Shader uniform type: sampler2d
 end enum
 
@@ -843,7 +856,7 @@ type TraceLogCallback as sub(byval logType as long, byval text as const zstring 
 type LoadFileDataCallback as function(byval fileName as const zstring ptr, byval dataSize as long ptr) as ubyte ptr
 type SaveFileDataCallback as function(byval fileName as const zstring ptr, byval data_ as any ptr, byval dataSize as long) as boolean
 type LoadFileTextCallback as function(byval fileName as const zstring ptr) as zstring ptr
-type SaveFileTextCallback as function(byval fileName as const zstring ptr, byval text as zstring ptr) as boolean
+type SaveFileTextCallback as function(byval fileName as const zstring ptr, byval text as const zstring ptr) as boolean
 
 ' Window-related functions
 declare sub InitWindow(byval width_ as long, byval height as long, byval title as const zstring ptr)
@@ -1001,10 +1014,17 @@ declare sub UnloadFileText(byval text as zstring ptr)
 declare function SaveFileText(byval fileName as const zstring ptr, byval text as zstring ptr) as boolean
 
 ' File system functions
+declare function FileRename(byval fileName as const zstring ptr, byval fileRenameTo as const zstring ptr) as long
+declare function FileRemove(byval filename as const zstring ptr) as long
+declare function _FileCopy alias "FileCopy" (byval srcPath as const zstring ptr, byval dstPatha as const zstring ptr) as long
+declare function FileMove (byval srcPath as const zstring ptr, byval dstPath as const zstring ptr) as long
+declare function FileTextReplace(byval fileName as const zstring ptr, byval search as const zstring ptr, byval replacement as const zstring ptr) as long
+declare function FileTextFindIndex(byval fileName as const zstring ptr, byval search as const zstring ptr) as long
 declare function _FileExists alias "FileExists" (byval fileName as const zstring ptr) as boolean
 declare function DirectoryExists(byval dirPath as const zstring ptr) as boolean
 declare function IsFileExtension(byval fileName as const zstring ptr, byval ext as const zstring ptr) as boolean
 declare function GetFileLength(byval filename as const zstring ptr) as long
+declare function GetFileModTime(byval fileName as const zstring ptr) as integer
 declare function GetFileExtension(byval fileName as const zstring ptr) as const zstring ptr
 declare function GetFileName(byval filePath as const zstring ptr) as const zstring ptr
 declare function GetFileNameWithoutExt(byval filePath as const zstring ptr) as const zstring ptr
@@ -1018,19 +1038,23 @@ declare function IsPathFile(byval path as const zstring ptr) as boolean
 declare function IsFileNameValid(byval fileName as const zstring ptr) as boolean
 declare function LoadDirectoryFiles(byval dirPath as const zstring ptr) as FilePathList
 declare function LoadDirectoryFilesEx(byval basePath as const zstring ptr, byval filter as const zstring ptr, byval scanSubdirs as boolean) as FilePathList
+declare sub UnloadDirectoryFiles(byval files as FilePathList)
 declare function IsFileDropped() as boolean
 declare function LoadDroppedFiles() as FilePathList
 declare sub UnloadDroppedFiles(byval files as FilePathList)
-declare function GetFileModTime(byval fileName as const zstring ptr) as integer
+declare function GetDirectoryFileCount(byval dirPath as const zstring ptr) as ulong
+declare function GetDirectoryFileCountEx(byval basePath as const zstring ptr, byval filter as const zstring ptr, byval scanSubDirs as boolean) as ulong
+
 
 ' Compression/Encoding Functionality
 declare function CompressData(byval data_ as const ubyte ptr, byval dataSize as long, byval compDataSize as long ptr) as ubyte ptr
 declare function DecompressData(byval compData as const ubyte ptr, byval compDataSize as long, byval dataSize as long ptr) as ubyte ptr
 declare function EncodeDataBase64(byval data_ as const ubyte ptr, byval dataSize as long, byval outputSize as long ptr) as ubyte ptr
-declare function DecodeDataBase64(byval data_ as const ubyte ptr, byval outputSize as long ptr) as ubyte ptr
+declare function DecodeDataBase64(byval text_ as const ubyte ptr, byval outputSize as long ptr) as ubyte ptr
 declare function ComputeCRC32(byval data_ as ubyte ptr, byval dataSize as long) as ulong
 declare function ComputeMD5(byval data_ as ubyte ptr, byval dataSize as long) as ulong ptr
 declare function ComputeSHA1(byval data_ as ubyte ptr, byval dataSize as long) as ulong ptr
+declare function ComputeSHA256(byval data_ as ubyte ptr, byval dataSize as long) as ulong ptr
 
 ' Automation events functionality
 declare function LoadAutomationEventList(byval fileName as const zstring ptr) as AutomationEventList
@@ -1050,6 +1074,7 @@ declare function IsKeyReleased(byval key as long) as boolean
 declare function IsKeyUp(byval key as long) as boolean
 declare function GetKeyPressed() as long
 declare function GetCharPressed() as long
+declare function GetKeyName(byval key as long) as const zstring ptr
 declare sub SetExitKey(byval key as long)
 
 ' Input-related functions: gamepads
@@ -1120,15 +1145,18 @@ declare sub DrawLineV(byval startPos as Vector2, byval endPos as Vector2, byval 
 declare sub DrawLineEx(byval startPos as Vector2, byval endPos as Vector2, byval thick as single, byval _color as RayColor)
 declare sub DrawLineStrip(byval points as Vector2 ptr, byval numPoints as long, byval _color as RayColor)
 declare sub DrawLineBezier(byval startPos as Vector2, byval endPos as Vector2, byval thick as single, byval _color as RayColor)
+declare sub DrawLineDashed(byval startPos as Vector2, byval endPost as Vector2, byval dashSize as long, byval spaceSize as long, byval color_ as RayColor)
 declare sub DrawCircle(byval centerX as long, byval centerY as long, byval radius as single, byval _color as RayColor)
+declare sub DrawCircleV(byval center as Vector2, byval radius as single, byval _color as RayColor)
+declare sub DrawCircleGradient(byval center as Vector2, byval radius as single, byval inner as RayColor, byval outer as RayColor)
 declare sub DrawCircleSector(byval center as Vector2, byval radius as single, byval startAngle as long, byval endAngle as long, byval segments as long, byval color_ as RayColor)
 declare sub DrawCircleSectorLines(byval center as Vector2, byval radius as single, byval startAngle as long, byval endAngle as long, byval segments as long, byval color_ as RayColor)
-declare sub DrawCircleGradient(byval centerX as long, byval centerY as long, byval radius as single, byval color1 as RayColor, byval color2 as RayColor)
-declare sub DrawCircleV(byval center as Vector2, byval radius as single, byval _color as RayColor)
 declare sub DrawCircleLines(byval centerX as long, byval centerY as long, byval radius as single, byval _color as RayColor)
 declare sub DrawCircleLinesV(byval center as Vector2, byval radius as single, byval _color as RayColor)
 declare sub DrawEllipse(byval centerX as long, byval centerY as long, byval radiusH as single, byval radiusV as single, byval _color as RayColor)
+declare sub DrawWllipseV(byval center as Vector2, byval radiusH as single, byval radiusV as single, byval color_ as RayColor)
 declare sub DrawEllipseLines(byval centerX as long, byval centerY as long, byval radiusH as single, byval radiusV as single, byval _color as RayColor)
+declare sub DrawEllipseLinesV(byval center as Vector2, byval radiusH as single, byval radiusV as single, byval _color as RayColor)
 declare sub DrawRing(byval center as Vector2, byval innerRadius as single, byval outerRadius as single, byval startAngle as long, byval endAngle as long, byval segments as long, byval color_ as RayColor)
 declare sub DrawRingLines(byval center as Vector2, byval innerRadius as single, byval outerRadius as single, byval startAngle as long, byval endAngle as long, byval segments as long, byval color_ as RayColor)
 declare sub DrawRectangle(byval posX as long, byval posY as long, byval width_ as long, byval height as long, byval _color as RayColor)
@@ -1137,7 +1165,7 @@ declare sub DrawRectangleRec(byval rec as Rectangle, byval _color as RayColor)
 declare sub DrawRectanglePro(byval rec as Rectangle, byval origin as Vector2, byval rotation as single, byval color_ as RayColor)
 declare sub DrawRectangleGradientV(byval posX as long, byval posY as long, byval width_ as long, byval height as long, byval color1 as RayColor, byval color2 as RayColor)
 declare sub DrawRectangleGradientH(byval posX as long, byval posY as long, byval width_ as long, byval height as long, byval color1 as RayColor, byval color2 as RayColor)
-declare sub DrawRectangleGradientEx(byval rec as Rectangle, byval col1 as RayColor, byval col2 as RayColor, byval col3 as RayColor, byval col4 as RayColor)
+declare sub DrawRectangleGradientEx(byval rec as Rectangle, byval topLeft as RayColor, byval bottomLeft as RayColor, byval bottomRight as RayColor, byval topRight as RayColor)
 declare sub DrawRectangleLines(byval posX as long, byval posY as long, byval width_ as long, byval height as long, byval _color as RayColor)
 declare sub DrawRectangleLinesEx(byval rec as Rectangle, byval lineThick as long, byval _color as RayColor)
 declare sub DrawRectangleRounded(byval rec as Rectangle, byval roundness as single, byval segments as long, byval _color as RayColor)
@@ -1263,11 +1291,11 @@ declare sub ImageDrawRectangleLines(byval dst as Image ptr, byval rec as Rectang
 declare sub ImageDrawTriangle(byval dst as Image ptr, byval v1 as Vector2, byval v2 as Vector2, byval v3 as Vector2, byval _color as RayColor)
 declare sub ImageDrawTriangleEx(byval dst as Image ptr, byval v1 as Vector2, byval v2 as Vector2, byval v3 as Vector2, byval c1 as RayColor, byval c2 as RayColor, byval c3 as RayColor)
 declare sub ImageDrawTriangleLines(byval dst as Image ptr, byval v1 as Vector2, byval v2 as Vector2, byval v3 as Vector2, byval _color as RayColor)
-declare sub ImageDrawTrinagleFan(byval dst as Image ptr, byval points as Vector2 ptr, byval pointCount as long, byval _color as RayColor)
-declare sub ImageDrawTrinagleStrip(byval dst as Image ptr, byval points as Vector2 ptr, byval pointCount as long, byval _color as RayColor)
+declare sub ImageDrawTrinagleFan(byval dst as Image ptr, byval points as const Vector2 ptr, byval pointCount as long, byval _color as RayColor)
+declare sub ImageDrawTrinagleStrip(byval dst as Image ptr, byval points as const Vector2 ptr, byval pointCount as long, byval _color as RayColor)
 declare sub ImageDraw(byval dst as Image ptr, byval src as Image, byval srcRec as Rectangle, byval dstRec as Rectangle, byval tint as RayColor)
 declare sub ImageDrawText(byval dst as Image ptr, byval text as const zstring ptr, byval posX as long, byval posY as long, byval fontSize as long, byval _color as RayColor)
-declare sub ImageDrawTextEx(byval dst as Image ptr, byval font as Font, byval text as const zstring ptr, byval position as Vector2, byval fontSize as single, byval spacing as single, byval tint as RayColor)
+declare sub ImageDrawTextEx(byval dst as Image ptr, byval font_ as Font, byval text as const zstring ptr, byval position as Vector2, byval fontSize as single, byval spacing as single, byval tint as RayColor)
 
 ' Texture loading functions
 ' NOTE: These functions require GPU access
@@ -1321,11 +1349,11 @@ declare function GetPixelDataSize(byval width_ as long, byval height as long, by
 ' Font loading/unloading functions
 declare function GetFontDefault() as Font
 declare function LoadFont(byval fileName as const zstring ptr) as Font
-declare function LoadFontEx(byval fileName as const zstring ptr, byval fontSize as long, byval codepoints as long ptr, byval codepointCount as long) as Font
+declare function LoadFontEx(byval fileName as const zstring ptr, byval fontSize as long, byval codepoints as const long ptr, byval codepointCount as long) as Font
 declare function LoadFontFromImage(byval _image as Image, byval key as RayColor, byval firstChar as long) as Font
-declare function LoadFontFromMemory(byval fileType as const zstring ptr, byval fileData as const ubyte ptr, byval dataSize as long, byval fontSize as long, byval codepoints as long ptr, byval codepointCount as long) as Font
+declare function LoadFontFromMemory(byval fileType as const zstring ptr, byval fileData as const ubyte ptr, byval dataSize as long, byval fontSize as long, byval codepoints as const long ptr, byval codepointCount as long) as Font
 declare function IsFontValid(byval _font as Font) as boolean
-declare function LoadFontData(byval filedata as const ubyte ptr, byval dataSize as long, byval fontSize as long, byval codepoints as long ptr, byval codepointCount as long, byval fontType as long) as GlyphInfo ptr
+declare function LoadFontData(byval filedata as const ubyte ptr, byval dataSize as long, byval fontSize as long, byval codepoints as const long ptr, byval codepointCount as long, byval fontType as long, byval glyphCount as long ptr) as GlyphInfo ptr
 declare function GenImageFontAtlas(byval glyphs as const GlyphInfo ptr, byval glyphRecs as Rectangle ptr ptr, byval glyphCount as long, byval fontSize as long, byval padding as long, byval packMethod as long) as Image
 declare sub UnloadFontData(byval glyphs as GlyphInfo ptr, byval glyphCount as long)
 declare sub UnloadFont(byval _font as Font)
@@ -1343,6 +1371,7 @@ declare sub DrawTextCodepoints(byval _font as Font, byval codepoints as const lo
 declare sub SetTextLineSpacing(byval spacing as long)
 declare function MeasureText(byval text as const zstring ptr, byval fontSize as long) as long
 declare function MeasureTextEx(byval _font as Font, byval text as const zstring ptr, byval fontSize as single, byval spacing as single) as Vector2
+declare function MeasureTextCodepoints(byval _font as Font, byval codepoints as const long ptr, byval length as long, byval fontSize as single, byval spacing as single) as Vector2
 declare function GetGlyphIndex(byval _font as Font, byval codepoint as long) as long
 declare function GetGlyphInfo(byval _font as Font, byval codepoint as long) as GlyphInfo
 declare function GetGlyphAtlasRec(byval _font as Font, byval codepoint as long) as Rectangle
@@ -1359,23 +1388,32 @@ declare function GetCodepointPrevious(byval text as const zstring ptr, byval cod
 declare function CodepointToUTF8(byval codepoint as long, byval utf8Size as long ptr) as const zstring ptr
 
 ' Text strings management functions (no UTF-8 strings, only byte chars)
-' NOTE: Some strings allocate memory internally for returned strings, just be careful!
+' WARNING 1: Most of these functions use internal static buffers[], it's recommended to store returned data on user-side for re-use
+' WARNING 2: Some functions allocate memory internally for the returned strings, those strings must be freed by user using MemFree()
+declare function LoadTextLines(byval text as const zstring ptr, byval count as long ptr) as zstring ptr ptr
+declare sub UnloadTextLines(byval text as zstring ptr ptr, byval lineCount as long)
 declare function TextCopy(byval dst as zstring ptr, byval src as const zstring ptr) as long
 declare function TextIsEqual(byval text1 as const zstring ptr, byval text2 as const zstring ptr) as boolean
 declare function TextLength(byval text as const zstring ptr) as ulong
 declare function TextFormat(byval text as const zstring ptr, ...) as const zstring ptr
 declare function TextSubtext(byval text as const zstring ptr, byval position as long, byval length as long) as const zstring ptr
-declare function TextReplace(byval text as zstring ptr, byval replace as const zstring ptr, byval by as const zstring ptr) as zstring ptr
+declare function TextRemoveSpaces(byval text as const zstring ptr) as const zstring ptr
+declare function GetTextBetween(byval text as const zstring ptr, byval begin_ as const zstring ptr, byval end_ as const zstring ptr) as zstring ptr
+declare function TextReplace(byval text as const zstring ptr, byval search as const zstring ptr, byval replacement as const zstring ptr) as zstring ptr
+declare function TextReplaceAlloc(byval text as const zstring ptr, byval search as const zstring ptr, byval replacement as const zstring ptr) as zstring ptr
+declare function TextReplaceBetween(byval text as const zstring ptr, byval search as const zstring ptr, byval begin_ as const zstring ptr, byval end_ as const zstring ptr, byval replacement as const zstring ptr) as zstring ptr
+declare function TextReplaceBetweenAlloc(byval text as const zstring ptr, byval search as const zstring ptr, byval begin_ as const zstring ptr, byval end_ as const zstring ptr, byval replacement as const zstring ptr) as zstring ptr
 declare function TextInsert(byval text as const zstring ptr, byval insert as const zstring ptr, byval position as long) as zstring ptr
-declare function TextJoin(byval textList as const zstring ptr ptr, byval count as long, byval delimiter as const zstring ptr) as const zstring ptr
-declare function TextSplit(byval text as const zstring ptr, byval delimiter as byte, byval count as long ptr) as const zstring ptr ptr
+declare function TextInsertAlloc(byval text as const zstring ptr, byval insert as const zstring ptr, byval position as long) as zstring ptr
+declare function TextJoin(byval textList as const zstring ptr ptr, byval count as long, byval delimiter as const zstring ptr) as zstring ptr
+declare function TextSplit(byval text as const zstring ptr, byval delimiter as byte, byval count as long ptr) as zstring ptr ptr
 declare sub TextAppend(byval text as zstring ptr, byval _append as const zstring ptr, byval position as long ptr)
 declare function TextFindIndex(byval text as const zstring ptr, byval find as const zstring ptr) as long
-declare function TextToUpper(byval text as const zstring ptr) as const zstring ptr
-declare function TextToLower(byval text as const zstring ptr) as const zstring ptr
-declare function TextToPascal(byval text as const zstring ptr) as const zstring ptr
-declare function TextToSnake(byval text as const zstring ptr) as const zstring ptr
-declare function TextToCamel(byval text as const zstring ptr) as const zstring ptr
+declare function TextToUpper(byval text as const zstring ptr) as zstring ptr
+declare function TextToLower(byval text as const zstring ptr) as zstring ptr
+declare function TextToPascal(byval text as const zstring ptr) as zstring ptr
+declare function TextToSnake(byval text as const zstring ptr) as zstring ptr
+declare function TextToCamel(byval text as const zstring ptr) as zstring ptr
 
 declare function TextToInteger(byval text as const zstring ptr) as long
 declare function TextToFloat(byval text as const zstring ptr) as single
@@ -1423,8 +1461,6 @@ declare sub DrawModel(byval _model as Model, byval position as Vector3, byval sc
 declare sub DrawModelEx(byval _model as Model, byval position as Vector3, byval rotationAxis as Vector3, byval rotationAngle as single, byval scale as Vector3, byval tint as RayColor)
 declare sub DrawModelWires(byval _model as Model, byval position as Vector3, byval scale as single, byval tint as RayColor)
 declare sub DrawModelWiresEx(byval _model as Model, byval position as Vector3, byval rotationAxis as Vector3, byval rotationAngle as single, byval scale as Vector3, byval tint as RayColor)
-declare sub DrawModelPoints(byval _model as Model, byval position as Vector3, byval scale as single, byval tint as RayColor)
-declare sub DrawModelPointsEx(byval _model as Model, byval position as Vector3, byval rotationAxis as Vector3, byval rotationAngle as single, byval scale as Vector3, byval tint as RayColor)
 declare sub DrawBoundingBox(byval box as BoundingBox, byval _color as RayColor)
 declare sub DrawBillboard(byval _camera as Camera3D, byval _texture as Texture2D, byval center as Vector3, byval size as single, byval tint as RayColor)
 declare sub DrawBillboardRec(byval _camera as Camera3D, byval _texture as Texture2D, byval sourceRec as Rectangle, byval center as Vector3, byval size as single, byval tint as RayColor)
@@ -1464,9 +1500,8 @@ declare sub SetModelMeshMaterial(byval _model as Model ptr, byval meshId as long
 
 ' Model animations loading/unloading functions
 declare function LoadModelAnimations(byval fileName as const zstring ptr, byval animsCount as long ptr) as ModelAnimation ptr
-declare sub UpdateModelAnimation(byval _model as Model, byval anim as ModelAnimation, byval frame as long)
-declare sub UpdateModelAnimationBones(byval _model as Model, byval anim as ModelAnimation, byval frame as long)
-declare sub UnloadModelAnimation(byval anim as ModelAnimation)
+declare sub UpdateModelAnimation(byval _model as Model, byval anim as ModelAnimation, byval frame as single)
+declare sub UpdateModelAnimationEx(byval _model as Model, byval anim as ModelAnimation, byval frameA as single, byval animB as ModelAnimation, byval frameB as single, byval blend as single)
 declare sub UnloadModelAnimations(byval anims as ModelAnimation ptr, byval animCount as long)
 declare function IsModelAnimationValid(byval _model as Model, byval anim as ModelAnimation) as boolean
 

@@ -20,7 +20,7 @@
 *
 *   LICENSE: zlib/libpng
 *
-*   Copyright (c) 2022-2024 Christoph Wagner (@Crydsch) & Ramon Santamaria (@raysan5)
+*   Copyright (c) 2022-2026 Christoph Wagner (@Crydsch) and Ramon Santamaria (@raysan5)
 *
 *   This software is provided "as-is", without any express or implied warranty. In no event
 *   will the authors be held liable for any damages arising from the use of this software.
@@ -38,6 +38,7 @@
 *     3. This notice may not be removed or altered from any source distribution.
 *
 *********************************************************************************************'/
+'FreeBASIC translation by Ebben Feagan 2025
 
 #ifndef RCAMERA_BI
 #define RCAMERA_BI
@@ -110,7 +111,7 @@ end extern
 '----------------------------------------------------------------------------------
 #define CAMERA_MOVE_SPEED                               5.4f       ' Units per second
 #define CAMERA_ROTATION_SPEED                           0.03f
-#define CAMERA_PAN_SPEED                                0.2f
+#define CAMERA_PAN_SPEED                                2.0f
 
 ' Camera mouse movement sensitivity
 #define CAMERA_MOUSE_MOVE_SENSITIVITY                   0.003f
@@ -162,8 +163,14 @@ sub CameraMoveForward(byval camera as Camera3D ptr, byval distance as single, by
 
     if (moveInWorldPlane) then
     
-        ' Project vector onto world plane
-        forward.y = 0
+        ' Project vector onto world plane (the plane defined by the up vector)
+        if (abs(camera->up.z) > 0.7071f) then
+            forward.z = 0
+        else if (abs(camera->up.x) > 0.7071f) then
+            forward.x = 0
+        else
+            forward.y = 0
+        end if
         forward = Vector3Normalize(forward)
     end if
 
@@ -195,8 +202,14 @@ sub CameraMoveRight(byval camera as Camera3D ptr, byval distance as single, byva
 
     if (moveInWorldPlane) then
     
-        ' Project vector onto world plane
-        right_.y = 0
+        ' Project vector onto world plane (the plane defined by the up vector)
+        if (abs(camera->up.z) > 0.7071f) then
+            right_.z = 0
+        else if (abs(camera->up.x) > 0.7071f) then
+            right_.x = 0
+        else
+            right_.y = 0
+        end if
         right_ = Vector3Normalize(right_)
     end if
 
