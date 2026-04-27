@@ -371,7 +371,7 @@ declare function QuaternionFromEuler(byval pitch as single, byval yaw as single,
 declare function QuaternionToEuler(byval q as Quaternion) as Vector3
 declare function QuaternionTransform(byval q as Quaternion, byval mat as Matrix) as Quaternion
 declare function QuaternionEquals(byval a as Quaternion, byval b as Quaternion) as boolean
-declare function MatrixCompose( byval translation as Vector3, byval rotation Quaternion, byval scale Vector3) as Matrix
+declare function MatrixCompose( byval translation as Vector3, byval rotation as Quaternion, byval scale as Vector3) as Matrix
 declare sub MatrixDecompose(byval mat as Matrix, byval translation as Vector3 ptr, byval rotation as Quaternion ptr, byval scale as Vector3 ptr)
 
 #ifdef USE_C_IMP
@@ -1461,10 +1461,10 @@ function MatrixMultiply(byval left_ as Matrix, byval right_ as Matrix) as Matrix
 end function
 
 function MatrixMultiplyValue(byval left_ as Matrix, byval value as single) as Matrix
-        return type<Matrix>( left.m0*value, left.m4*value, left.m8*value, left.m12*value, _
-                            left.m1*value, left.m5*value, left.m9*value, left.m13*value, _
-                            left.m2*value, left.m6*value, left.m10*value, left.m14*value, _
-                            left.m3*value, left.m7*value, left.m11*value, left.m15*value )
+        return type<Matrix>( left_.m0*value, left_.m4*value, left_.m8*value, left_.m12*value, _
+                            left_.m1*value, left_.m5*value, left_.m9*value, left_.m13*value, _
+                            left_.m2*value, left_.m6*value, left_.m10*value, left_.m14*value, _
+                            left_.m3*value, left_.m7*value, left_.m11*value, left_.m15*value )
 end function
 
 function MatrixTranslate(byval x as single, byval y as single, byval z as single) as Matrix
@@ -2082,10 +2082,6 @@ function QuaternionFromAxisAngle(byval axis as Vector3, byval angle as single) a
     if (length <> 0.0f) then
         angle *= 0.5f
 
-        length = axisLength
-        if (length = 0.0f) then
-            length = 1.0f
-        end if
         var ilength = 1.0f/length
         axis.x *= ilength
         axis.y *= ilength
@@ -2211,7 +2207,7 @@ function QuaternionEquals(byval p as Quaternion, byval q as Quaternion) as boole
             ((fabsf(p.w + q.w)) <= (EPSILON*fmaxf(1.0f, fmaxf(fabsf(p.w), fabsf(q.w))))))
 end function
 
-function MatrixCompose( byval translation as Vector3, byval rotation Quaternion, byval scale Vector3) as Matrix
+function MatrixCompose( byval translation as Vector3, byval rotation as Quaternion, byval scale as Vector3) as Matrix
 
     ' Initialize vectors
     var right_ = type<Vector3>(1.0f, 0f, 0f)
