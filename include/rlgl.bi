@@ -129,7 +129,7 @@
 
 ' Default internal render batch elements limits
 #ifndef RL_DEFAULT_BATCH_BUFFER_ELEMENTS
-    #if defined(GRAPHICS_API_OPENGL_11) || defined(GRAPHICS_API_OPENGL_33)
+    #if defined(GRAPHICS_API_OPENGL_11) OR defined(GRAPHICS_API_OPENGL_33)
         ' This is the maximum amount of elements (quads) per batch
         ' NOTE: Be careful with text, every letter maps to a quad
         #define RL_DEFAULT_BATCH_BUFFER_ELEMENTS  8192
@@ -491,7 +491,7 @@ declare sub rlSetBlendFactorsSeparate(byval glSrcRGB as long, byval glDstRGB as 
 ' rlgl initialization functions
 declare sub rlglInit(byval width_ as long, byval height as long)             ' Initialize rlgl (buffers, shaders, textures, states)
 declare sub rlglClose()                             ' De-initialize rlgl (buffers, shaders, textures)
-declare sub rlLoadExtensions(void *loader)              ' Load OpenGL extensions (loader function required)
+declare sub rlLoadExtensions(byval loader as any ptr)              ' Load OpenGL extensions (loader function required)
 declare function rlGetVersion() as long                          ' Get current OpenGL version
 declare sub rlSetFramebufferWidth(byval width_ as long)            ' Set current framebuffer width
 declare function rlGetFramebufferWidth() as long                 ' Get default framebuffer width
@@ -536,7 +536,7 @@ declare sub rlDrawVertexArrayElementsInstanced(byval offset as long, byval count
 declare function rlLoadTexture(byval data_ as const any ptr, byval width_ as long, byval height as long, byval format_ as long, byval mipmapCount as long) as ulong ' Load texture data
 declare function rlLoadTextureDepth(byval width_ as long, byval height as long, byval useRenderBuffer as boolean) as ulong ' Load depth texture/renderbuffer (to be attached to fbo)
 declare function rlLoadTextureCubemap(byval data_ as const any ptr, byval size as long, byval format_ as long, byval mipmapCount as long) as ulong ' Load texture cubemap data
-declare sub rlUpdateTexture(byval id as ulong, byval offset as longX, byval offset as longY, byval width_ as long, byval height as long, byval format_ as long, byval data_ as const any ptr) ' Update texture with new data on GPU
+declare sub rlUpdateTexture(byval id as ulong, byval offsetX as long, byval offsetY as long, byval width_ as long, byval height as long, byval format_ as long, byval data_ as const any ptr) ' Update texture with new data on GPU
 declare sub rlGetGlTextureFormats(byval format_ as long, byval glInternalFormat as ulong ptr, byval glFormat as ulong ptr, byval glType as ulong ptr) ' Get OpenGL internal formats
 declare function rlGetPixelFormatName(byval format_ as ulong) as const zstring ptr             ' Get name string for pixel format
 declare sub rlUnloadTexture(byval id as ulong)                              ' Unload texture from GPU memory
