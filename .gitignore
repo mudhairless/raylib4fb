@@ -1,4 +1,7 @@
 examples/*.exe
+examples/*
+examples/!*.*
 examples/*.dll
 src/*.o
 src/*.a
+lib/lin64/*.a
