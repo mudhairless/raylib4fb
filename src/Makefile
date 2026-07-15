@@ -34,7 +34,7 @@ dir-exists:
 	@$(FBCC) -lib $(FBCCOPTS) rres-raylib.o -x ../lib/$(TARGET)/librres-raylib.a
 
 %.o : %.c
-	$(CC) $(COPTS) -c $<
+	@$(CC) $(COPTS) -c $<
 
 .PHONY : clean
 clean : clean-objects clean-libraries
