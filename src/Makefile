@@ -1,28 +1,50 @@
 CC := gcc
-COPTS :=
+TARGET != $(CC) -dumpmachine
+ifeq ($(DEBUG),1)
+	COPTS := -g
+	FBCCOPTS := -g
+else
+	COPTS := -O2 -march=native
+	FBCCOPTS :=
+endif
+
 FBCC := fbc
 
-all : ../lib/lin64/libraygui.a ../lib/lin64/librlgl.a ../lib/lin64/librres.a ../lib/lin64/librres-raylib.a
+all : dir-exists ../lib/$(TARGET)/libraygui.a ../lib/$(TARGET)/librlgl.a ../lib/$(TARGET)/librres.a ../lib/$(TARGET)/librres-raylib.a
 
-../lib/lin64/libraygui.a : raygui.o
-	@$(FBCC) -lib raygui.o -x ../lib/lin64/libraygui.a
+.PHONY : dir-exists
+dir-exists:
+	@echo "Creating Library directory for $(TARGET)"
+	@mkdir -p ../lib/$(TARGET)
 
-../lib/lin64/librlgl.a : rlgl.o
-	@$(FBCC) -lib rlgl.o -x ../lib/lin64/librlgl.a
+../lib/$(TARGET)/libraygui.a : raygui.o
+	@echo "Compiling RayGUI"
+	@$(FBCC) -lib $(FBCCOPTS) raygui.o -x ../lib/$(TARGET)/libraygui.a
 
-../lib/lin64/librres.a : rres.o
-	@$(FBCC) -lib rres.o -x ../lib/lin64/librres.a
+../lib/$(TARGET)/librlgl.a : rlgl.o
+	@echo "Compiling RLGL"
+	@$(FBCC) -lib $(FBCCOPTS) rlgl.o -x ../lib/$(TARGET)/librlgl.a
 
-../lib/lin64/librres-raylib.a : rres-raylib.o
-	@$(FBCC) -lib rres-raylib.o -x ../lib/lin64/librres-raylib.a
+../lib/$(TARGET)/librres.a : rres.o
+	@echo "Compiling Rres"
+	@$(FBCC) -lib $(FBCCOPTS) rres.o -x ../lib/$(TARGET)/librres.a
+
+../lib/$(TARGET)/librres-raylib.a : rres-raylib.o
+	@echo "Compiling Rres-raylib"
+	@$(FBCC) -lib $(FBCCOPTS) rres-raylib.o -x ../lib/$(TARGET)/librres-raylib.a
 
 %.o : %.c
-	@$(CC) $(COPTS) -c $<
+	$(CC) $(COPTS) -c $<
 
-.PHONY clean : clean-objects clean-libraries
+.PHONY : clean
+clean : clean-objects clean-libraries
 
+.PHONY : clean-objects
 clean-objects :
+	@echo "Removing Object Files"
 	@-rm *.o
 
+.PHONY : clean-libraries
 clean-libraries :
-	@-rm ../lib/lin64/libraygui.a ../lib/lin64/librlgl.a ../lib/lin64/librres.a ../lib/lin64/librres-raylib.a
+	@echo "Removing Libraries"
+	@-rm ../lib/$(TARGET)/libraygui.a ../lib/$(TARGET)/librlgl.a ../lib/$(TARGET)/librres.a ../lib/$(TARGET)/librres-raylib.a

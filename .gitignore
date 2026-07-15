@@ -4,4 +4,6 @@ examples/!*.*
 examples/*.dll
 src/*.o
 src/*.a
-lib/lin64/*.a
+lib/*
+!lib/win32/*
+!lib/win64/*

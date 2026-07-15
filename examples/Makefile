@@ -1,5 +1,7 @@
+CC := gcc
+TARGET != $(CC) -dumpmachine
 FBCC := fbc
-FBC_OPTS := -i ../include -p ../lib/lin64 -w all -exx -g
+FBC_OPTS := -i ../include -p ../lib/$(TARGET) -w all -exx -g
 
 all : 2d_camera 2d_camera_platformer 2d_camera_split_screen 3d_camera_first_person 3d_camera_free 3d_camera_mode 3d_camera_split_screen 3d_picking basic basic_screen_manager bullet_hell delta_time input_gamepad_info kaleidoscope models_animation models_billboard models_bone_socket models_box_collisions models_first_person_maze raygui_control_test_suite raygui_simple rres_load_image scissor_test shaders_basic_lighting smooth_pixel_perfect
 
@@ -78,5 +80,7 @@ shaders_basic_lighting : shaders_basic_lighting.bas
 smooth_pixel_perfect : smooth_pixel_perfect.bas
 	@$(FBCC) $(FBC_OPTS) $<
 
-.PHONY clean :
+.PHONY : clean
+clean:
+	@echo "Removing Example executables"
 	@-rm 2d_camera 2d_camera_platformer 2d_camera_split_screen 3d_camera_first_person 3d_camera_free 3d_camera_mode 3d_camera_split_screen 3d_picking basic basic_screen_manager bullet_hell delta_time input_gamepad_info kaleidoscope models_animation models_billboard models_bone_socket models_box_collisions models_first_person_maze raygui_control_test_suite raygui_simple rres_load_image scissor_test shaders_basic_lighting smooth_pixel_perfect
